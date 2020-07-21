@@ -89,7 +89,7 @@ def main():
             for i, l in enumerate(fnames)
         ]
         names = [l.split('.')[0] for l in names]
-        print(join(args.data_root, fnames[0].split(' ')[0]))
+        # print(join(args.data_root, fnames[0].split(' ')[0]))
         input_size = cv2.imread(join(args.data_root,
                                      fnames[0].split(' ')[0])).shape
 
