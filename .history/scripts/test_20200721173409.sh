@@ -1,0 +1,13 @@
+python -u inference.py \
+  --task=flow \
+  --data_root=/data5/bdd100k/images/track/val \
+  --data_list=lists\seg_track_val.txt \
+  --context \
+  --encoder=dlaup \
+  --decoder=hda \
+  --batch_size=1 \
+  --workers=16 \
+  --flow_format=png/flo \
+  --evaluate \
+  --model_path=path_to_trained_model \
+  --save_folder=path_to_save_predictions

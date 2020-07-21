@@ -8,5 +8,6 @@ python -u inference.py \
   --batch_size=1 \
   --workers=16 \
   --flow_format=png \
-  --model_path=model_zoo/hd3fc_chairs_things_kitti-bfa97911.pth \
-  --save_folder=predictions/fc_pre_KT_seg_track_val
+  --evaluate \
+  --model_path=path_to_trained_model \
+  --save_folder=path_to_save_predictions
