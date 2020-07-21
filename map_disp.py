@@ -47,7 +47,7 @@ def main():
         for anno in annos:
             mask = coco.annToMask(anno)
             new_mask = map_disp(mask, flow_fn)
-            instance_iou = iou(mask, new_mask)
+            instance_iou = iou(mask, new_mask, np.asfortranarray(np.zeros((1,1))))
             print(i, instance_iou)
 
     # for f, d in zip(flow_list, disp_list):
