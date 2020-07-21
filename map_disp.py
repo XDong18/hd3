@@ -37,6 +37,7 @@ def main():
     for i, line in enumerate(image_list):
         image_name = line.strip(' \n').split(' ')[0]
         flow_fn = os.path.join('/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_KT_seg_track_val', image_name)
+        print(flow_fn)
         video_name = image_name.split('/')[0]
         video_idx = VIDEO_NAMES[video_name]
         image_idx = i + video_idx
