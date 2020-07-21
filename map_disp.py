@@ -31,7 +31,7 @@ def map_disp(mask_img, flow_fn):
 def main():
     num = 0
     total = 0
-    coco = COCO('/data5/bdd100k/labels/seg_track/seg_track_val.json')
+    coco = COCO('/shared/xudongliu/code/semi-flow/hd3/bdd100k_json/seg_track_val.json')
     with open('/shared/xudongliu/code/semi-flow/hd3/lists/seg_track_val.txt') as f:
         image_list = f.readlines()
     
@@ -56,6 +56,7 @@ def main():
             print(i, instance_iou)
             total += instance_iou[0][0]
             num += 1
+            
         print('average:' total / num)
 
 
