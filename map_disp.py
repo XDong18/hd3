@@ -29,6 +29,8 @@ def map_disp(mask_img, flow_fn):
     return new_mask
 
 def main():
+    num = 0
+    total = 0
     coco = COCO('/data5/bdd100k/labels/seg_track/seg_track_val.json')
     with open('/shared/xudongliu/code/semi-flow/hd3/lists/seg_track_val.txt') as f:
         image_list = f.readlines()
@@ -52,6 +54,10 @@ def main():
             instance_iou = iou([e_mask], [e_new_mask], [0])
             # instance_iou = iou(e_mask, e_new_mask, [np.asfortranarray(np.zeros((1)))])
             print(i, instance_iou)
+            total += instance_iou[0][0]
+            num += 1
+        print('average:' total / num)
+
 
     # for f, d in zip(flow_list, disp_list):
     #     new_fn = map_disp(os.path.join(flow_dir, f), os.path.join(disp_dir, d)).astype('uint16')
