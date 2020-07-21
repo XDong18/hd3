@@ -49,7 +49,7 @@ def main():
             new_mask = map_disp(mask, flow_fn)
             e_mask = encode(np.asfortranarray(mask))
             e_new_mask = encode(np.asfortranarray(new_mask))
-            instance_iou = iou(e_mask, e_new_mask, np.asfortranarray(np.zeros((1))))
+            instance_iou = iou(e_mask, e_new_mask, [np.asfortranarray(np.zeros((1)))])
             print(i, instance_iou)
 
     # for f, d in zip(flow_list, disp_list):
