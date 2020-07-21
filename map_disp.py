@@ -47,8 +47,8 @@ def main():
         for anno in annos:
             mask = coco.annToMask(anno)
             new_mask = map_disp(mask, flow_fn)
-            e_mask = encode(mask)
-            e_new_mask = encode(new_mask)
+            e_mask = encode(np.asfortranarray(mask))
+            e_new_mask = encode(np.asfortranarray(new_mask))
             instance_iou = iou(e_mask, e_new_mask, np.asfortranarray(np.zeros((1))))
             print(i, instance_iou)
 
