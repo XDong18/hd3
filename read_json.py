@@ -12,6 +12,8 @@ image_list = seg_track_dir['images']
 with open(out_fn, 'w') as f:
     for i, image_info in enumerate(image_list):
         video_id = image_info['video_id']
+        if i==len(image_list) - 1:
+            break
         next_video_id = image_list[i + 1]['video_id']
         if video_id == next_video_id:
             image_fn = os.path.join(image_info['file_name'][:17], image_info['file_name'])
