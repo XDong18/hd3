@@ -56,8 +56,8 @@ def main():
             print(i, instance_iou)
             total += instance_iou[0][0]
             num += 1
-            
-        print('average:' total / num)
+
+        print('average:', total / num)
 
 
     # for f, d in zip(flow_list, disp_list):
