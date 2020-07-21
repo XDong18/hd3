@@ -1,3 +1,4 @@
+export CUDA_VISIBLE_DEVICES=3,4,6,7,8,9
 python -u inference.py \
   --task=flow \
   --data_root=/data5/bdd100k/images/track/val \
