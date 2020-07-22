@@ -6,6 +6,7 @@ from pycocotools.mask import *
 
 FRAME_NUMS = [201, 201, 202, 202]
 VIDEO_NAMES = {'b1c81faa-3df17267': 0, 'b1c81faa-c80764c5': 1, 'b1c9c847-3bda4659': 2, 'b1ca2e5d-84cf9134': 3}
+COLORS = [[255, 0, 0], [0, 255, 0], [0, 0, 255], [100, 100, 100], [200, 100 ,50]]
 
 def map_disp(mask_img, flow_fn):
     flow = cv2.imread(flow_fn, -1)[:,:,::-1].astype(np.float)
@@ -39,16 +40,20 @@ def main():
     for i, line in enumerate(image_list):
         image_name = line.strip(' \n').split(' ')[0]
         image_name = image_name.split('.')[0] + '.png'
-        flow_fn = os.path.join('/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_Sintel_seg_track_val/vec', image_name)
+        flow_fn = os.path.join('/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_KT_seg_track_val/vec', image_name)
         print(flow_fn)
         video_name = image_name.split('/')[0]
         video_idx = VIDEO_NAMES[video_name]
         image_idx = i + video_idx
         annIds = coco.getAnnIds(imgIds=[image_idx], iscrowd=None)
         annos = coco.loadAnns(annIds)
-        for anno in annos:
+        vis_image_a = np.zeros((720, 1280, 3))
+        vis_image_b = np.zeros((720, 1280, 3))
+        for i, anno in enumerate(annos):
             mask = coco.annToMask(anno)
+            vis_image_a[np.where(mask==1)] = COLORS[i]
             new_mask = map_disp(mask, flow_fn)
+            vis_image_b[np.where(new_mask==1)] = COLORS[i]
             e_mask = encode(np.asfortranarray(mask))
             e_new_mask = encode(np.asfortranarray(new_mask))
             instance_iou = iou([e_mask], [e_new_mask], [0])
@@ -56,6 +61,11 @@ def main():
             print(i, instance_iou)
             total += instance_iou[0][0]
             num += 1
+
+        cv2.imwrite('test_a.png', vis_image_a)
+        cv2.imwrite('test_b.png', vis_image_b)
+        break
+
 
         print('average:', total / num)
 
