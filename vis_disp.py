@@ -68,7 +68,7 @@ def main():
     cv2.imwrite('test_b.png', vis_image_b)
 
 
-    print('average:', total / num)
+    # print('average:', total / num)
 
 
     # for f, d in zip(flow_list, disp_list):
