@@ -79,9 +79,7 @@ def main():
         annos = coco.loadAnns(annIds)
         for i, anno in enumerate(annos):
             mask = coco.annToMask(anno)
-            vis_image_a[np.where(mask==1)] = COLORS[i]
             new_mask = add_flow(mask, flow_fn)
-            vis_image_b[np.where(new_mask==1)] = COLORS[i]
             e_mask = encode(np.asfortranarray(mask))
             e_new_mask = encode(np.asfortranarray(new_mask))
             instance_iou = iou([e_mask], [e_new_mask], [0])
