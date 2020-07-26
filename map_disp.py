@@ -11,7 +11,7 @@ def get_parser():
     parser.add_argument('--json', type=str, help='json file path')
     parser.add_argument('--flow_maps', type=str, help='flow_maps directory')
     parser.add_argument('--pair_list', type=str, help='pair list directory')
-    return parser
+    return parser.parse_args()
 
 
 # FRAME_NUMS = [201, 201, 202, 202]
@@ -43,7 +43,7 @@ def add_flow(mask_img, flow_fn):
     return new_mask
 
 def main():
-    args = get_parser()
+    args = get_parser()parse_args()
     
     
     # coco = COCO('/shared/xudongliu/code/semi-flow/hd3/bdd100k_json/seg_track_val.json')
