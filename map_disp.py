@@ -43,7 +43,7 @@ def add_flow(mask_img, flow_fn):
     return new_mask
 
 def main():
-    args = get_parser()parse_args()
+    args = get_parser()
     
     
     # coco = COCO('/shared/xudongliu/code/semi-flow/hd3/bdd100k_json/seg_track_val.json')
