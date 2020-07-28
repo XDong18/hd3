@@ -24,13 +24,10 @@ def mask(pair):
     image_name = line.strip(' \n').split(' ')[0]
     image_name = image_name.split('.')[0] + '.png'
     mkdir(os.path.join(args.out, image_name.split('/')[0]))
-    # video name and index
-    video_name = image_name.split('/')[0]
-    video_idx = video_dir[video_name]
 
     # image index
-    image_idx = i + video_idx
-
+    image_idx = i
+    
     # load annotation via cocoapi
     annIds = coco.getAnnIds(imgIds=[image_idx], iscrowd=None)
     annos = coco.loadAnns(annIds)
