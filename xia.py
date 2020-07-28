@@ -51,7 +51,8 @@ def flow_warp(x, flo):
 def warping(fn_list):
     mask_fn, flow_fn, pred_fn = fn_list
     mask = cv2.imread(mask_fn, cv2.IMREAD_GRAYSCALE).astype(np.float)
-    flow = readFlow(flow_fn)
+    flow = cv2.imread(flow_fn)[:, :, ::-1].astype(np.float)
+    flow = (flow[:, :, :2] - 2.0 ** 15) / 64.0
     # new mask
     img = torch.Tensor(mask).unsqueeze(dim=0).unsqueeze(dim=1)
     flow = torch.Tensor(flow).permute(2, 0, 1).contiguous().unsqueeze(dim=0)
@@ -63,7 +64,7 @@ def warping(fn_list):
 
 def main():
     gt_base = '/shared/xudongliu/code/semi-flow/mask'
-    fl_base = ''
+    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_KT_seg_track_val/vec'
     pd_base = 'pd_mask/bdd-KT-val'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
     if not os.isfolder(pd_base):
@@ -75,7 +76,7 @@ def main():
     
     for i, line in enumerate(pair_list):
         gt_name = os.path.join(gt_base, line.strip(' \n').split(' ')[0].split('.')[0] + '.png')
-        flow_name = os.path.join(fl_base, line.strip(' \n').split(' ')[0].split('.')[0] + '.flo')
+        flow_name = os.path.join(fl_base, line.strip(' \n').split(' ')[0].split('.')[0] + '.png')
         pd_name = os.path.join(gt_base, line.strip(' \n').split(' ')[1].split('.')[0] + '.png')
         args.append([gt_name, flow_name, pd_name])
 
