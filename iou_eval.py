@@ -18,6 +18,7 @@ def iou(pair):
     fn1, fn2 = pair
     img1 = cv2.imread(fn1)
     img2 = cv2.imread(fn2)
+    print(fn2)
     e_mask = encode(np.asfortranarray(img1))
     e_new_mask = encode(np.asfortranarray(img2))
     map_iou = iou([e_mask], [e_new_mask], [0])
@@ -25,7 +26,7 @@ def iou(pair):
 
 def main():
     pd_base = '/shared/xudongliu/code/semi-flow/hd3/pd_mask/bdd-Sintel-val'
-    gt_base = '/shared/xudongliu/code/semi-flow/masks'
+    gt_base = '/shared/xudongliu/code/semi-flow/mask'
     # args = get_parser()
 
     # load json file in coco format
