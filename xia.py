@@ -78,7 +78,7 @@ def main():
     for i, line in enumerate(pair_list):
         gt_name = os.path.join(gt_base, line.strip(' \n').split(' ')[0].split('.')[0] + '.png')
         flow_name = os.path.join(fl_base, line.strip(' \n').split(' ')[0].split('.')[0] + '.png')
-        pd_name = os.path.join(gt_base, line.strip(' \n').split(' ')[1].split('.')[0] + '.png')
+        pd_name = os.path.join(pd_base, line.strip(' \n').split(' ')[1].split('.')[0] + '.png')
         args.append([gt_name, flow_name, pd_name])
 
     pool = mp.Pool(16)
