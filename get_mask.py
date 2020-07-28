@@ -52,7 +52,7 @@ def get_name_list(fn):
     for i, image_info in enumerate(image_list):
         image_fn = os.path.join(image_info['file_name'][:17], image_info['file_name'])
         name_list.append(image_fn)
-    return image_list
+    return name_list
 
 def main():
     global coco
