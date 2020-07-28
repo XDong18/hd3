@@ -58,7 +58,7 @@ def warping(fn_list):
     flow = torch.Tensor(flow).permute(2, 0, 1).contiguous().unsqueeze(dim=0)
 
     new_mask = flow_warp(img, flow)
-    print(pred_fn, type(new_mask))
+    print(pred_fn, new_mask.shape)
     cv2.imwrite(pred_fn, new_mask)
     print(pred_fn)
 
