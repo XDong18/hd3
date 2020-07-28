@@ -209,8 +209,8 @@ def main():
                     vis_flo = fl.flow_to_image(curr_vect)
                 else:
                     vis_flo = fl.flow_to_image(fl.disp2flow(curr_vect))
-                vis_flo = cv2.cvtColor(vis_flo, cv2.COLOR_RGB2BGR)
-                cv2.imwrite(vis_fn, vis_flo)
+                # vis_flo = cv2.cvtColor(vis_flo, cv2.COLOR_RGB2BGR)
+                # cv2.imwrite(vis_fn, vis_flo)
 
                 # save point estimates
                 fn_suffix = 'png'

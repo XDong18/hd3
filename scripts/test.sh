@@ -6,7 +6,7 @@ python -u inference.py \
   --context \
   --encoder=dlaup \
   --decoder=hda \
-  --batch_size=24 \
+  --batch_size=16 \
   --workers=16 \
   --flow_format=png \
   --model_path=model_zoo/hd3fc_chairs_things_kitti-bfa97911.pth \
