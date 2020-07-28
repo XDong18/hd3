@@ -45,7 +45,7 @@ def flow_warp(x, flo):
     vgrid = vgrid.permute(0, 2, 3, 1)
     output = F.grid_sample(x, vgrid, mode='nearest', padding_mode='border')
 
-    return output
+    return output.squeeze().numpy()
 
 
 def warping(fn_list):
