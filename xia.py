@@ -59,7 +59,7 @@ def warping(fn_list):
 
     new_mask = flow_warp(img, flow)
     print(pred_fn, new_mask.shape)
-    if not os.path.exists(os.path.split(pred_fn)[0]):
+    if not os.path.isdir(os.path.split(pred_fn)[0]):
         os.makedirs(os.path.split(pred_fn)[0])
     a = cv2.imwrite(pred_fn, new_mask)
     print(a)
