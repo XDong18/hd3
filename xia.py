@@ -67,7 +67,7 @@ def main():
     fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_KT_seg_track_val/vec'
     pd_base = 'pd_mask/bdd-KT-val'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
-    if not os.isfolder(pd_base):
+    if not os.path.exists(pd_base):
         os.makedirs(pd_base)
     args = []
 
