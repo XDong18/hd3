@@ -59,8 +59,8 @@ def warping(fn_list):
 
     new_mask = flow_warp(img, flow)
     print(pred_fn, new_mask.shape)
-    cv2.imwrite(pred_fn, new_mask)
-    print(pred_fn)
+    a = cv2.imwrite(pred_fn, new_mask)
+    print(a)
 
 
 def main():
