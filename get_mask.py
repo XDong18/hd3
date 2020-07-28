@@ -27,7 +27,7 @@ def mask(pair):
 
     # image index
     image_idx = i
-    
+
     # load annotation via cocoapi
     annIds = coco.getAnnIds(imgIds=[image_idx], iscrowd=None)
     annos = coco.loadAnns(annIds)
@@ -41,7 +41,7 @@ def mask(pair):
             mask += coco.annToMask(anno)
     
     mask[np.where(mask>0)] = 1
-    cv2.imwrite(image_name, mask)
+    cv2.imwrite(os.path.join(args.out, image_name), mask)
 
 def get_name_list(fn):
     name_list = []
