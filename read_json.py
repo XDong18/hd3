@@ -1,8 +1,8 @@
 import json
 import os
 
-fn = '/data5/bdd100k/labels/seg_track/seg_track_val.json'
-out_fn = 'lists/seg_track_val.txt'
+fn = '/data5/bdd100k/labels/seg_track/seg_track_val_new.json'
+out_fn = 'lists/seg_track_val_new.txt'
 
 with open(fn) as f:
     seg_track_dir = json.load(f)

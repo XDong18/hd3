@@ -13,10 +13,6 @@ def get_parser():
     parser.add_argument('--pair_list', type=str, help='pair list directory')
     return parser.parse_args()
 
-
-# FRAME_NUMS = [201, 201, 202, 202]
-# VIDEO_NAMES = {'b1c81faa-3df17267': 0, 'b1c81faa-c80764c5': 1, 'b1c9c847-3bda4659': 2, 'b1ca2e5d-84cf9134': 3}
-
 def add_flow(mask_img, flow_fn):
     '''
     mask_img: np.array
@@ -44,11 +40,6 @@ def add_flow(mask_img, flow_fn):
 
 def main():
     args = get_parser()
-    
-    
-    # coco = COCO('/shared/xudongliu/code/semi-flow/hd3/bdd100k_json/seg_track_val.json')
-    # with open('/shared/xudongliu/code/semi-flow/hd3/lists/seg_track_val.txt') as f:
-    #     image_list = f.readlines()
 
     # load json file in coco format
     coco = COCO(args.json)
@@ -65,24 +56,38 @@ def main():
 
     num = 0
     total = 0
-    # image_list = image_list[:806] # TODO
     for i, line in enumerate(image_list):
+        # for each pair to be evaluate
+
+        # flow_map path
         image_name = line.strip(' \n').split(' ')[0]
         image_name = image_name.split('.')[0] + '.png'
-        # flow_fn = os.path.join('/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_KT_seg_track_val/vec', image_name)
         flow_fn = os.path.join(args.flow_maps, image_name)
-        # print(flow_fn)
+
+        # video name and index
         video_name = image_name.split('/')[0]
         video_idx = video_dir[video_name]
+
+        # image index
         image_idx = i + video_idx
+
+        # load annotation via cocoapi
         annIds = coco.getAnnIds(imgIds=[image_idx], iscrowd=None)
         annos = coco.loadAnns(annIds)
         for i, anno in enumerate(annos):
+            # for each instance in a frame
+            # load mask
             mask = coco.annToMask(anno)
+            # add flow
             new_mask = add_flow(mask, flow_fn)
+
+            # encode mask and new_mask
             e_mask = encode(np.asfortranarray(mask))
             e_new_mask = encode(np.asfortranarray(new_mask))
+
+            # compute IoU via coco mask API
             instance_iou = iou([e_mask], [e_new_mask], [0])
+            
             print(i, instance_iou)
             total += instance_iou[0][0]
             num += 1
