@@ -32,14 +32,15 @@ def mask(pair):
     annIds = coco.getAnnIds(imgIds=[image_idx], iscrowd=None)
     annos = coco.loadAnns(annIds)
 
-    mask = np.zeros((720,1280))
-    for i, anno in enumerate(annos):
-        # for each instance in a frame
-        # load mask
-        mask += coco.annToMask(anno)
+    # mask = np.zeros((720,1280))
+    # for i, anno in enumerate(annos):
+    #     # for each instance in a frame
+    #     # load mask
+    #     mask += coco.annToMask(anno)
     
-    mask[np.where(mask>0)] = 1
-    cv2.imwrite(os.path.join(args.out, image_name), mask)
+    # mask[np.where(mask>0)] = 1
+    # cv2.imwrite(os.path.join(args.out, image_name), mask)
+    return len(annos)
 
 def get_name_list(fn):
     name_list = []
