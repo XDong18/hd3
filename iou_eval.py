@@ -25,7 +25,7 @@ def iou(pair):
     return map_iou[0][0]
 
 def main():
-    pd_base = '/shared/xudongliu/code/semi-flow/hd3/pd_mask/bdd-Sintel-val'
+    pd_base = '/shared/xudongliu/code/semi-flow/hd3/pd_mask/bdd-Sintel-val-new'
     gt_base = '/shared/xudongliu/code/semi-flow/mask'
     # args = get_parser()
 
