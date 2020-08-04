@@ -48,7 +48,7 @@ def flow_warp(x, flo):
     vgrid = vgrid.permute(0, 2, 3, 1)
     output = F.grid_sample(x, vgrid, mode='nearest', padding_mode='border')
 
-    return output.squeeze().numpy()
+    return output.squeeze().numpy().astype(np.uint8)
 
 def instance_warp(fn_list):
     flow_fn, img_name_sur, img_name_des = fn_list
