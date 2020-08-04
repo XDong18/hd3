@@ -1,8 +1,8 @@
 import cv2
 import os
 
-sur = 'pd_mask/bdd-KT-val-new'
-des = 'pd_mask/bdd-KT-val-new-vis'
+sur = 'pd_mask/bdd-Sintel-val-new'
+des = 'pd_mask/bdd-Sintel-val-new-vis'
 
 def main():
     for video_fn in os.listdir(sur):
