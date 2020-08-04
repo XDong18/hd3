@@ -1,13 +1,13 @@
-export CUDA_VISIBLE_DEVICES=1,2,3,4
+export CUDA_VISIBLE_DEVICES=5,6,7,8
 python -u inference.py \
   --task=flow \
-  --data_root=/shared/xudongliu/MPI \
-  --data_list=lists/MPISintel_test_clean_pass.txt \
+  --data_root=/data5/bdd100k/images/track/val \
+  --data_list=lists/seg_track_val_new_5.txt \
   --encoder=dlaup \
   --decoder=hda \
   --batch_size=16 \
   --workers=16 \
   --context \
-  --flow_format=flo \
-  --model_path=model_zoo/hd3fc_chairs_things_sintel-0be17c83.pth \
-  --save_folder=predictions/fc_pre_Sintel_clean
+  --flow_format=png \
+  --model_path=model_zoo/hd3fc_chairs_things_kitti-bfa97911.pth \
+  --save_folder=predictions/fc_pre_KT_seg_track_5
