@@ -7,6 +7,7 @@ python -u inference.py \
   --decoder=hda \
   --batch_size=16 \
   --workers=16 \
+  --context \
   --flow_format=png \
   --model_path=/shared/xudongliu/code/hd3/checkpoints/ft_fc_MPI_2_r/model_best.pth \
   --save_folder=predictions/fc_pre_Sintel_seg_track_val_my
