@@ -2,4 +2,5 @@
 .history/
 *.jpg
 *.png
-*.json
+*.jso
+*.flo
