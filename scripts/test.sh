@@ -10,4 +10,4 @@ python -u inference.py \
   --context \
   --flow_format=flo \
   --model_path=model_zoo/hd3fc_chairs_things_sintel-0be17c83.pth \
-  --save_folder=predictions/fc_pre_Sintel
+  --save_folder=predictions/fc_pre_Sintel_final
