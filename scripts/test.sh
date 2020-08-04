@@ -3,7 +3,6 @@ python -u inference.py \
   --task=flow \
   --data_root=/data5/bdd100k/images/track/val \
   --data_list=/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt \
-  --context \
   --encoder=dlaup \
   --decoder=hda \
   --batch_size=16 \
