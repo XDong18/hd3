@@ -54,6 +54,7 @@ def instance_warp(fn_list):
     flow_fn, img_name_sur, img_name_des = fn_list
     flow = cv2.imread(flow_fn, -1)[:, :, ::-1].astype(np.float)
     flow = (flow[:, :, :2] - 2.0 ** 15) / 64.0
+    flow = torch.Tensor(flow).permute(2, 0, 1).contiguous().unsqueeze(dim=0)
     img_id = reverse_img_dir[img_name_sur]
     img_id_des = reverse_img_dir[img_name_des]
     annIds = coco.getAnnIds(imgIds=[img_id], iscrowd=None)
@@ -74,8 +75,7 @@ def instance_warp(fn_list):
         mask = coco.annToMask(anno)
         mask_des = coco.annToMask(anno_des)
         mask = torch.Tensor(mask).unsqueeze(dim=0).unsqueeze(dim=1)
-        print(flow.shape)
-        flow = torch.Tensor(flow).permute(2, 0, 1).contiguous().unsqueeze(dim=0)
+        # print(flow.shape)
         new_mask = flow_warp(mask, flow)
         e_mask_des = encode(np.asfortranarray(mask_des))
         e_new_mask = encode(np.asfortranarray(new_mask))
