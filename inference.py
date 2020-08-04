@@ -227,7 +227,7 @@ def main():
                         fl.write_kitti_png_file(vect_fn, curr_vect, mask_blob)
                     else:
                         # save flo format flow
-                        fl.write_flow(curr_vect, vect_fnvect_fn)
+                        fl.write_flow(curr_vect, vect_fn)
                 else:
                     # save disparity map
                     cv2.imwrite(vect_fn,
