@@ -12,7 +12,7 @@ def main():
         des_video_dir = os.path.join(des, video_fn)
         for img_fn in os.listdir(video_dir):
             img = cv2.imread(os.path.join(video_dir, img_fn))
-            img *= 255 / img.max()
+            img *= 255
             cv2.imwrite(os.path.join(des_video_dir, img_fn), img)
 
 if __name__ == "__main__":
