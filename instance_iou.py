@@ -73,6 +73,8 @@ def instance_warp(fn_list):
         anno_des = annos_des[idx]
         mask = coco.annToMask(anno)
         mask_des = coco.annToMask(anno_des)
+        mask = torch.Tensor(mask).unsqueeze(dim=0).unsqueeze(dim=1)
+        flow = torch.Tensor(flow).permute(2, 0, 1).contiguous().unsqueeze(dim=0)
         new_mask = flow_warp(mask, flow)
         e_mask_des = encode(np.asfortranarray(mask_des))
         e_new_mask = encode(np.asfortranarray(new_mask))
