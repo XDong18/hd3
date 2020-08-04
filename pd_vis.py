@@ -6,6 +6,8 @@ des = 'pd_mask/bdd-Sintel-val-new-vis'
 
 def main():
     for video_fn in os.listdir(sur):
+        if '.ipynb' in video_fn:
+            continue
         if not os.path.exists(os.path.join(des, video_fn)):
             os.makedirs(os.path.join(des, video_fn))
         video_dir = os.path.join(sur, video_fn)
