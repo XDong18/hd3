@@ -9,5 +9,5 @@ python -u inference.py \
   --workers=16 \
   --context \
   --flow_format=png \
-  --model_path=model_zoo/hd3fc_chairs_things_kitti-bfa97911.pth \
-  --save_folder=predictions/fc_pre_KT_seg_track_5
+  --model_path=/shared/xudongliu/code/hd3/checkpoints/ft_fc_MPI_2_r/model_best.pth \
+  --save_folder=predictions/fc_my_Sintel_seg_track_5
