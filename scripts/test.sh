@@ -8,5 +8,5 @@ python -u inference.py \
   --batch_size=16 \
   --workers=16 \
   --flow_format=png \
-  --model_path=model_zoo/hd3f_chairs_things_sintel-5b4ad51a.pth \
-  --save_folder=predictions/f_pre_Sintel_seg_track_val
+  --model_path=/shared/xudongliu/code/hd3/checkpoints/ft_fc_MPI_2_r/model_best.pth \
+  --save_folder=predictions/fc_pre_Sintel_seg_track_val_my
