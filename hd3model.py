@@ -63,6 +63,8 @@ class HD3Model(nn.Module):
 
         ms_prob, ms_vect = self.hd3net(torch.cat(img_list, 1))
         sur_map, tar_map = label_list
+        sur_map = sur_map.requires_grad_()
+        tar_map = tar_map.requires_grad_()
 
         if get_vect:
             result['vect'] = ms_vect[-1]
