@@ -74,13 +74,13 @@ class HD3Model(nn.Module):
         out_vect = resize_dense_vector(result['vect'] * scale_factor,
                                         img_list[0].shape[2], img_list[0].shape[3])
         
-        warped_map = self.flow_warp(sur_map, out_vect)
+        warped_map = self.flow_warp(sur_map.float(), out_vect)
 
         if get_prob:
             result['prob'] = ms_prob[-1]
         if get_loss:
             # new crossentropy loss
-            result['loss'] = self.criterion(warped_map, tar_map)
+            result['loss'] = self.criterion(warped_map, tar_map.long())
         # if get_epe:
         #     scale_factor = 1 / 2**(self.ds - len(ms_vect) + 1)
         #     result['epe'] = self.eval_epe(ms_vect[-1] * scale_factor,
