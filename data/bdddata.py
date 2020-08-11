@@ -58,8 +58,8 @@ class BDD_Data(Dataset):
 
             idx = instance_ids_des.index(instance_id)
             anno_des = annos_des[idx]
-            mask = coco.annToMask(anno)
-            mask_des = coco.annToMask(anno_des)
+            mask = self.coco.annToMask(anno)
+            mask_des = self.coco.annToMask(anno_des)
             sur_map[np.where(mask>0)] = curr_instance_id
             tar_map[np.where(mask_des>0)] = curr_instance_id
             curr_instance_id += 1
