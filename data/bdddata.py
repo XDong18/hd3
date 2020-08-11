@@ -1,4 +1,5 @@
 from os.path import exists, join, splitext
+import os
 import numpy as np
 from PIL import Image
 import utils.flowlib as fl
@@ -73,8 +74,8 @@ class BDD_Data(Dataset):
         label_list = []
         img_list.append(read_gen(join(self.data_root, self.data_list[index][0]), "image"))
         img_list.append(read_gen(join(self.data_root, self.data_list[index][1]), "image"))
-        img_id = self.reverse_img_dir[self.data_list[index][1]]
-        img_id_des = self.reverse_img_dir[self.data_list[index][0]]
+        img_id = self.reverse_img_dir[os.path.split(self.data_list[index][1])[-1]]
+        img_id_des = self.reverse_img_dir[os.path.split(self.data_list[index][0])[-1]]
         sur_map, tar_map = self.generate_instance_maps(img_id, img_id_des)
         label_list.append(sur_map)
         label_list.append(tar_map)
