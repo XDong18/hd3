@@ -67,7 +67,7 @@ class BDD_Data(Dataset):
         
         sur_map = np.expand_dims(sur_map, axis=-1)
         tar_map = np.expand_dims(tar_map, axis=-1)
-        return sur_map, tar_map
+        return Image.fromarray(sur_map), Image.fromarray(tar_map)
 
     def __getitem__(self, index):
         # img_num = len(self.data_list[index])
