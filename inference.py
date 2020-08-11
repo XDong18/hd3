@@ -192,7 +192,7 @@ def main():
                         batch_time=batch_time))
 
             pred_vect = output['vect'].data.cpu().numpy()
-            pred_prob = outpub['prob'].data.cpu().numpy()
+            pred_prob = output['prob'].data.cpu().numpy()
             pred_vect = np.transpose(pred_vect, (0, 2, 3, 1))
             pred_prob = np.transpose(pred_prob, (0, 2, 3, 1))
             curr_bs = pred_vect.shape[0]
