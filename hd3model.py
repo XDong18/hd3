@@ -80,6 +80,10 @@ class HD3Model(nn.Module):
             result['prob'] = ms_prob[-1]
         if get_loss:
             # new crossentropy loss
+            B, C, H, W = warped_map.size
+            warped_map = torch.nn.functional.one_hot(warped_map.view(B, H, W))
+            warped_map = warped_map.reshape(B, warped_map.size()[3], H, W)
+            tar_map = tar_map.reshape(B, H, W)
             result['loss'] = self.criterion(warped_map, tar_map.long())
         # if get_epe:
         #     scale_factor = 1 / 2**(self.ds - len(ms_vect) + 1)
