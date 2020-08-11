@@ -199,6 +199,7 @@ class MultiScaleRandomCrop(object):
         self.method = method
 
     def __call__(self, img_list, label_list):
+        print(type(label_list))
         temp_scale = self.scale[0] + (self.scale[1] -
                                       self.scale[0]) * random.random()
         new_crop_h = int(self.crop_h * temp_scale)
