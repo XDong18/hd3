@@ -72,7 +72,7 @@ class HD3Model(nn.Module):
         scale_factor = 1 / 2**(7 - len(corr_range))
 
         out_vect = resize_dense_vector(result['vect'] * scale_factor,
-                                        1280, 720)
+                                        720, 1280)
         
         warped_map = self.flow_warp(sur_map, out_vect)
 
