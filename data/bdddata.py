@@ -65,10 +65,10 @@ class BDD_Data(Dataset):
             tar_map[np.where(mask_des>0)] = curr_instance_id
             curr_instance_id += 1
         
-        sur_map = np.expand_dims(sur_map, axis=-1)
-        tar_map = np.expand_dims(tar_map, axis=-1)
-        print(sur_map.shape)
-        print(type(np.uint8(sur_map)))
+#         sur_map = np.expand_dims(sur_map, axis=-1)
+#         tar_map = np.expand_dims(tar_map, axis=-1)
+#         print(sur_map.shape)
+#         print(type(np.uint8(sur_map)))
         return Image.fromarray(np.uint8(sur_map)), Image.fromarray(np.uint8(tar_map))
 
     def __getitem__(self, index):
