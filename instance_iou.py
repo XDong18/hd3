@@ -46,12 +46,13 @@ def flow_warp(x, flo):
                         dim=1)
 
     vgrid = vgrid.permute(0, 2, 3, 1)
-    output = F.grid_sample(x, vgrid, mode='nearest', padding_mode='border')
+    output = F.grid_sample(x, vgrid, mode='nearest', padding_mode='border', align_corners=True)
 
     return output.squeeze().numpy().astype(np.uint8)
 
 def instance_warp(fn_list):
     flow_fn, img_name_sur, img_name_des = fn_list
+    #flow = readFlow(flow_fn)
     flow = cv2.imread(flow_fn, -1)[:, :, ::-1].astype(np.float)
     flow = (flow[:, :, :2] - 2.0 ** 15) / 64.0
     flow = torch.Tensor(flow).permute(2, 0, 1).contiguous().unsqueeze(dim=0)
@@ -92,9 +93,9 @@ def main():
     global coco
     # global anno_to_instance
 
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_KT_seg_track_val/vec'
+    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_Sintel_seg_track_val_my/vec'
     json_fn = '/data5/bdd100k/labels/seg_track/seg_track_val_new.json'
-    list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
+    list_file = '/shared/xudongliu/code/semi-flow/hd3/lists/seg_track_val_new.txt'
     coco = COCO(json_fn)
 
     with open(json_fn) as f:
