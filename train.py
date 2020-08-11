@@ -14,7 +14,7 @@ from tensorboardX import SummaryWriter
 
 import hd3model as models
 from utils.utils import *
-import data.hd3data as datasets
+import data.bdddata as datasets
 
 import cv2
 cv2.ocl.setUseOpenCL(False)
@@ -29,6 +29,8 @@ def get_parser():
     parser.add_argument('--val_root', type=str, help='validation data root')
     parser.add_argument('--train_list', type=str, help='train list')
     parser.add_argument('--val_list', type=str, help='val list')
+    parser.add_argument('--train_coco', type=str, help='train coco')
+    parser.add_argument('--val_coco', type=str, help='val coco')
 
     parser.add_argument('--task', type=str, help='stereo or flow')
     parser.add_argument('--encoder', type=str, help='vgg or dlaup')
@@ -138,11 +140,15 @@ def main():
     ### data loader ###
     train_transform, val_transform = datasets.get_transform(
         args.dataset_name, args.task, args.evaluate)
-    train_data = datasets.HD3Data(
+
+    train_coco, train_img_dir = datasets.generate_coco_info(args.train_coco)
+    val_coco, val_img_dir = datasets.generate_coco_info(args.val_coco)
+    train_data = datasets.BDD_Data(
         mode=args.task,
         data_root=args.train_root,
         data_list=args.train_list,
-        label_num=1,
+        coco_file=train_coco,
+        reverse_img_dir=train_img_dir,
         transform=train_transform)
     train_loader = torch.utils.data.DataLoader(
         train_data,
@@ -151,11 +157,12 @@ def main():
         num_workers=args.workers,
         pin_memory=True)
     if args.evaluate:
-        val_data = datasets.HD3Data(
+        val_data = datasets.BDD_Data(
             mode=args.task,
             data_root=args.val_root,
             data_list=args.val_list,
-            label_num=1,
+            coco_file=val_coco,
+            reverse_img_dir=val_img_dir,
             transform=val_transform)
         val_loader = torch.utils.data.DataLoader(
             val_data,
@@ -174,13 +181,13 @@ def main():
         writer.add_scalar('loss_train', loss_train, epoch)
 
         is_best = False
-        if args.evaluate:
-            torch.cuda.empty_cache()
-            loss_val, epe_val = validate(val_loader, model)
-            writer.add_scalar('loss_val', loss_val, epoch)
-            writer.add_scalar('epe_val', epe_val, epoch)
-            is_best = epe_val < best_epe_all
-            best_epe_all = min(epe_val, best_epe_all)
+        # if args.evaluate: # TODO change test metrix
+        #     torch.cuda.empty_cache()
+        #     loss_val, epe_val = validate(val_loader, model)
+        #     writer.add_scalar('loss_val', loss_val, epoch)
+        #     writer.add_scalar('epe_val', epe_val, epoch)
+        #     is_best = epe_val < best_epe_all
+        #     best_epe_all = min(epe_val, best_epe_all)
 
         filename = os.path.join(args.save_path, 'model_latest.pth')
         torch.save(
@@ -220,19 +227,16 @@ def train(train_loader, model, optimizer, epoch, batch_size):
         label_list = [label.to(torch.device("cuda")) for label in label_list]
 
         output = model(img_list=img_list, label_list=label_list, get_loss=True)
-        total_loss = output['loss']['total'].sum()
+        total_loss = output['loss']
 
         optimizer.zero_grad()
         total_loss.backward()
         optimizer.step()
 
         if loss_meter is None:
-            loss_meter = {}
-            for loss_type, _ in output['loss'].items():
-                loss_meter[loss_type] = AverageMeter()
-        for loss_type, loss_value in output['loss'].items():
-            loss_meter[loss_type].update(loss_value.mean().data,
-                                         img_list[0].size(0))
+            loss_meter = AverageMeter()
+
+        loss_meter.update(total_loss.item(), img_list[0].size(0))
 
         batch_time.update(time.time() - end)
         end = time.time()
@@ -256,14 +260,13 @@ def train(train_loader, model, optimizer, epoch, batch_size):
                             batch_time=batch_time,
                             data_time=data_time,
                             remain_time=remain_time))
-            for loss_type, loss_value in loss_meter.items():
-                logger.info('Loss {} {loss_meter.val:.4f} '.format(
-                    loss_type, loss_meter=loss_value))
+
+            logger.info('Loss {loss_meter.val:.4f} '.format(loss_meter=loss_meter))
 
         writer.add_scalar('total_loss_train_batch',
-                          loss_meter['total'].val.cpu().numpy(), current_iter)
+                          loss_meter.val.cpu().numpy(), current_iter)
 
-    return loss_meter['total'].avg.cpu().numpy()
+    return loss_meter.avg.cpu().numpy()
 
 
 def validate(val_loader, model):
