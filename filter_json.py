@@ -18,7 +18,7 @@ for video in video_list:
 print(len(temp_videos))
 
 for image in image_list:
-    if os.path.exists(os.path.join(root_dir, image["name"][:17], image["name"])):
+    if os.path.exists(os.path.join(root_dir, image["file_name"][:17], image["file_name"])):
         temp_images.append(image)
 print(len(temp_images))
 
