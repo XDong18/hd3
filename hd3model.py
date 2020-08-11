@@ -30,8 +30,8 @@ class HD3Model(nn.Module):
         """
         B, C, H, W = x.size()
         # mesh grid
-        xx = torch.arange(0, W).view(1, -1).repeat(H, 1)
-        yy = torch.arange(0, H).view(-1, 1).repeat(1, W)
+        xx = torch.arange(0, W).view(1, -1).repeat(H, 1).to(x.device)
+        yy = torch.arange(0, H).view(-1, 1).repeat(1, W).to(x.device)
         xx = xx.view(1, 1, H, W).repeat(B, 1, 1, 1)
         yy = yy.view(1, 1, H, W).repeat(B, 1, 1, 1)
         grid = torch.cat((xx, yy), 1).float()
