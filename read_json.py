@@ -1,7 +1,7 @@
 import json
 import os
 
-fn = '/data5/bdd100k/labels/seg_track/seg_track_train.json'
+fn = 'seg_track_train_new.json'
 out_fn = 'lists/seg_track_train.txt'
 gap = 1
 
