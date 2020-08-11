@@ -63,8 +63,7 @@ class HD3Model(nn.Module):
 
         ms_prob, ms_vect = self.hd3net(torch.cat(img_list, 1))
         sur_map, tar_map = label_list
-        sur_map = sur_map.requires_grad_()
-        tar_map = tar_map.requires_grad_()
+        sur_map = sur_map.float().requires_grad_()
 
         if get_vect:
             result['vect'] = ms_vect[-1]
@@ -76,7 +75,7 @@ class HD3Model(nn.Module):
         out_vect = resize_dense_vector(result['vect'] * scale_factor,
                                         img_list[0].shape[2], img_list[0].shape[3])
         
-        warped_map = self.flow_warp(sur_map.float(), out_vect)
+        warped_map = self.flow_warp(sur_map, out_vect)
 
         if get_prob:
             result['prob'] = ms_prob[-1]
