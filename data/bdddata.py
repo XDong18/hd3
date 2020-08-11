@@ -166,19 +166,19 @@ def get_transform(dataset_name, task, evaluate=True):
     elif dataset_name == 'KITTI':
         if task == 'flow':
             train_transform = transforms.Compose([
-                transforms.MultiScaleRandomCrop([0.5, 1.15], [320, 896],
-                                                'nearest'),
-                transforms.RandomHorizontalFlip(),
+#                 transforms.MultiScaleRandomCrop([0.5, 1.15], [320, 896],
+#                                                 'nearest'),
+#                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
-                transforms.RandomPhotometric(
-                    noise_stddev=0.0,
-                    min_contrast=-0.3,
-                    max_contrast=0.3,
-                    brightness_stddev=0.02,
-                    min_color=0.9,
-                    max_color=1.1,
-                    min_gamma=0.7,
-                    max_gamma=1.5),
+#                 transforms.RandomPhotometric(
+#                     noise_stddev=0.0,
+#                     min_contrast=-0.3,
+#                     max_contrast=0.3,
+#                     brightness_stddev=0.02,
+#                     min_color=0.9,
+#                     max_color=1.1,
+#                     min_gamma=0.7,
+#                     max_gamma=1.5),
                 transforms.Normalize(mean=mean, std=std)
             ])
         else:
