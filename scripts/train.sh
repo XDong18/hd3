@@ -3,7 +3,7 @@ python -u train.py \
   --dataset_name=KITTI \
   --train_root=/data5/bdd100k/images/track/train \
   --train_list=lists/seg_track_train.txt \
-  --train_coco=seg_track_train.json \
+  --train_coco=seg_track_train_new.json \
   --val_coco=/data5/bdd100k/labels/seg_track/seg_track_val_new.json \
   --val_root=/data5/bdd100k/images/track/train \
   --val_list=lists/seg_track_train.txt \
