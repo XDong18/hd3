@@ -135,6 +135,7 @@ def main():
 
     vis_folder = os.path.join(args.save_folder, 'vis')
     vec_folder = os.path.join(args.save_folder, 'vec')
+    prob_folder = os.path.join(args.save_folder, 'prob')
     check_makedirs(vis_folder)
     check_makedirs(vec_folder)
 
@@ -166,7 +167,8 @@ def main():
                 img_list=resized_img_list,
                 label_list=label_list,
                 get_vect=True,
-                get_epe=args.evaluate)
+                get_epe=args.evaluate,
+                get_prob=True)
             scale_factor = 1 / 2**(7 - len(corr_range))
             output['vect'] = resize_dense_vector(output['vect'] * scale_factor,
                                                  img_size[0, 1],
@@ -190,18 +192,27 @@ def main():
                         batch_time=batch_time))
 
             pred_vect = output['vect'].data.cpu().numpy()
+            pred_prob = outpub['prob'].data.cpu().numpy()
             pred_vect = np.transpose(pred_vect, (0, 2, 3, 1))
+            pred_prob = np.transpose(pred_prob, (0, 2, 3, 1))
             curr_bs = pred_vect.shape[0]
 
             for idx in range(curr_bs):
                 curr_idx = i * args.batch_size + idx
                 curr_vect = pred_vect[idx]
+                curr_prob = pred_prob[idx]
 
                 # make folders
                 vis_sub_folder = join(vis_folder, sub_folders[curr_idx])
                 vec_sub_folder = join(vec_folder, sub_folders[curr_idx])
+                prob_sub_folder = join(prob_folder, sub_folders[curr_idx])
                 check_makedirs(vis_sub_folder)
                 check_makedirs(vec_sub_folder)
+                check_makedirs(prob_sub_folder)
+                
+                # save prob files
+                prob_fn = join(prob_sub_folder, names[curr_idx] + '.png')
+                cv2.imwite(prob_fn, curr_prob * 255)
 
                 # save visualzation (disparity transformed to flow here)
                 vis_fn = join(vis_sub_folder, names[curr_idx] + '.png')
