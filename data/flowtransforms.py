@@ -45,12 +45,21 @@ class ToTensor(object):
             img = img.float()
         return img.div_(255)
 
-    def labelToTensor(self, label):
-        if not isinstance(label, np.ndarray) or len(label.shape) != 3:
+    def labelToTensor(self, img):
+        if isinstance(img, Image.Image):
+            img = np.asarray(img)
+        elif not isinstance(img, np.ndarray):
             raise (RuntimeError(
-                "flowtransforms.ToTensor() only handle np.ndarray with 3 dims label.\n"
+                "flowtransforms.ToTensor() only handle PIL Image and np.ndarray"
+                "[eg: data readed by PIL.Image.open()].\n"))
+        if len(img.shape) > 3 or len(img.shape) < 2:
+            raise (RuntimeError(
+                "flowtransforms.ToTensor() only handle np.ndarray with 3 dims or 2 dims.\n"
             ))
-        return torch.from_numpy(label.transpose(2, 0, 1)).float()
+        if len(img.shape) == 2:
+            img = np.expand_dims(img, axis=2)
+        img = torch.from_numpy(img.transpose(2, 0, 1))
+        return img
 
     def __call__(self, img_list, label_list):
         img_list = [self.imgToTensor(img) for img in img_list]
