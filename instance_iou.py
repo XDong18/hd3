@@ -65,8 +65,10 @@ def instance_warp(fn_list):
     instance_ids = [anno['instance_id'] for anno in annos]
     instance_ids_des = [anno['instance_id'] for anno in annos_des]
 
-    total_iou = 0
-    total_num = 0
+#     total_iou = 0
+#     total_num = 0
+    total_ious = np.zeros(8)
+    total_nums = np.zeros(8)
     for anno, instance_id in zip(annos, instance_ids):
         if instance_id not in instance_ids_des:
             continue
@@ -82,10 +84,12 @@ def instance_warp(fn_list):
         e_new_mask = encode(np.asfortranarray(new_mask))
         # compute IoU via coco mask API
         instance_iou = iou([e_mask_des], [e_new_mask], [0])
-        total_iou += instance_iou[0][0]
-        total_num += 1
+#         total_iou += instance_iou[0][0]
+#         total_num += 1
+        total_ious[anno['category_id']] += instance_iou[0][0]
+        total_nums[anno['category_id']] += 1
     
-    return [total_iou, total_num]
+    return [total_ious, total_nums]
 
 
 def main():
