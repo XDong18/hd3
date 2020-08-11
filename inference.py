@@ -212,7 +212,7 @@ def main():
                 
                 # save prob files
                 prob_fn = join(prob_sub_folder, names[curr_idx] + '.png')
-                cv2.imwite(prob_fn, curr_prob * 255)
+                cv2.imwrite(prob_fn, curr_prob * 255)
 
                 # save visualzation (disparity transformed to flow here)
                 vis_fn = join(vis_sub_folder, names[curr_idx] + '.png')
