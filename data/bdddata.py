@@ -32,7 +32,6 @@ class BDD_Data(Dataset):
         self.mode = mode
         self.data_root = data_root
         self.data_list = self.read_lists(data_list)
-        self.label_num = label_num
         self.transform = transform
         self.out_size = out_size
         self.coco = coco_file
