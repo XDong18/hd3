@@ -8,17 +8,17 @@ with open(fn) as f:
     seg_track_dir = json.load(f)
 
 new_track_dir = seg_track_dir
-new_track_dir['videos'] = []
-new_track_dir['images'] = []
-image_list = seg_track_dir['images']
-video_list = seg_track_dir['videos']
+new_track_dir["videos"] = []
+new_track_dir["images"] = []
+image_list = seg_track_dir["images"]
+video_list = seg_track_dir["videos"]
 for video in video_list:
-    if os.path.exists(os.path.join(root_dir, video['name'])):
-        new_track_dir['videos'].append(video)
+    if os.path.exists(os.path.join(root_dir, video["name"])):
+        new_track_dir["videos"].append(video)
 
 for image in image_list:
-    if os.path.exists(os.path.join(root_dir, image['name'][:17], image['name'])):
-        new_track_dir['images'].append(image)
+    if os.path.exists(os.path.join(root_dir, image["name"][:17], image["name"])):
+        new_track_dir["images"].append(image)
 
 with open(new_fn, 'w') as f:
     json.dump(new_track_dir, f)
