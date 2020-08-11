@@ -123,9 +123,10 @@ def main():
 
     pool = mp.Pool(16)
     results = pool.map(instance_warp, args)
-    iou_list = np.array([result[0] for result in results])
-    num_list = np.array([result[1] for result in results])
-    print(iou_list.sum() / num_list.sum())
+    iou_list = np.sum(np.concatenate([np.expand_dims(result[0], aixs=0) for result in results], axis=0), axis=0)
+    num_list = np.sum(np.concatenate([np.expand_dims(result[1], aixs=0) for result in results], axis=0), axis=0)
+
+    print(iou_list / num_list)
 
 if __name__ == "__main__":
     main()
