@@ -43,8 +43,8 @@ class BDD_Data(Dataset):
         return len(self.data_list)
 
     def generate_instance_maps(self, img_id, img_id_des):
-        sur_map = np.zeros(1280, 720)
-        tar_map = np.zeros(1280, 720)
+        sur_map = np.zeros((1280, 720))
+        tar_map = np.zeros((1280, 720))
         annIds = self.coco.getAnnIds(imgIds=[img_id], iscrowd=None)
         annIds_des = self.coco.getAnnIds(imgIds=[img_id_des], iscrowd=None)
         annos = self.coco.loadAnns(annIds)
