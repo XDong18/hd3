@@ -1,20 +1,20 @@
+export CUDA_VISIBLE_DEVICES=2,3,4,5,6,7,8,9
 python -u train.py \
-  --dataset_name=your_dataset_name \
-  --train_root=path_to_your_training_data \
-  --train_list=lists/dataset_training_list \
-  --val_root=path_to_your_validation_data \
-  --val_list=lists/dataset_validation_list \
-  --task=stereo/flow \
-  --base_lr=initial_learning_rate \
+  --dataset_name=KITTI \
+  --train_root=/data5/bdd100k/images/track/train \
+  --train_list=lists/seg_track_train.txt \
+  --val_root=/data5/bdd100k/images/track/train \
+  --val_list=lists/seg_track_train.txt \
+  --task=flow \
+  --base_lr=1e-5 \
+  --pretrain=model_zoo/hd3fc_chairs_things-0b92a7f5.pth \
   --encoder=dlaup \
   --decoder=hda \
   --context \
   --workers=16 \
   --epochs=200 \
   --batch_size=32 \
-  --evaluate \
   --batch_size_val=4 \
-  --pretrain=path_to_pretrained_model \
   --visual_freq=20 \
   --save_step=50 \
-  --save_path=path_to_store_model
+  --save_path=checkpoints/seg_track_bdd
