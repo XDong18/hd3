@@ -153,7 +153,8 @@ class RandomHorizontalFlip(object):
                 img.transpose(Image.FLIP_LEFT_RIGHT) for img in img_list
             ]
             label_list = [
-                fl.horizontal_flip_flow(label) for label in label_list
+                label.transpose(Image.FLIP_LEFT_RIGHT) for label in label_list
+#                 fl.horizontal_flip_flow(label) for label in label_list
             ]
         return img_list, label_list
 
@@ -221,7 +222,7 @@ class MultiScaleRandomCrop(object):
             for img in img_list
         ]
         label_list = [
-            fl.resize_flow(label, self.crop_w, self.crop_h, self.method)
+            label.resize((self.crop_w, self.crop_h), Image.BILINEAR)
             for label in label_list
         ]
 
