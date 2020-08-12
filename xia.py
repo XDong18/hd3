@@ -65,8 +65,8 @@ def instance_warp(fn_list):
     annos_des = coco.loadAnns(annIds_des)
     instance_ids = [anno['instance_id'] for anno in annos]
     instance_ids_des = [anno['instance_id'] for anno in annos_des]
-    sur_color_map = np.zeros(720, 1280, 3)
-    tar_color_map = np.zeros(720, 1280, 3)
+    sur_color_map = np.zeros((720, 1280, 3))
+    tar_color_map = np.zeros((720, 1280, 3))
 
     color_id = 0
     for anno, instance_id in zip(annos, instance_ids):
