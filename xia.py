@@ -107,11 +107,11 @@ def main():
     global out_tar_file
     # global anno_to_instance
 
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_Sintel_seg_track_val/vec'
+    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_Sintel_seg_track_val_my/vec'
     json_fn = '/data5/bdd100k/labels/seg_track/seg_track_val_new.json'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
-    out_sur_file = '/shared/xudongliu/code/semi-flow/hd3/color_mask/frame_1'
-    out_tar_file = '/shared/xudongliu/code/semi-flow/hd3/color_mask/frame_0'
+    out_sur_file = '/shared/xudongliu/code/semi-flow/hd3/color_mask/frame_1_my'
+    out_tar_file = '/shared/xudongliu/code/semi-flow/hd3/color_mask/frame_0_my'
     coco = COCO(json_fn)
 
     with open(json_fn) as f:
