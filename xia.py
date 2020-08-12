@@ -4,6 +4,11 @@ import cv2
 import torch
 import multiprocessing as mp
 from torch.nn import functional as F
+from pycocotools.coco import COCO
+import json
+
+COLORS = np.array([[255,255,255], [0,255,255],[255,0,255],[255,255,0],[255,125,50],[125,255,50],[50,255,125],[255,50,125],[125,50,255],\
+        [50, 125, 255]])
 
 def readFlow(name):
     f = open(name, 'rb')
@@ -45,47 +50,89 @@ def flow_warp(x, flo):
     vgrid = vgrid.permute(0, 2, 3, 1)
     output = F.grid_sample(x, vgrid, mode='nearest', padding_mode='border')
 
-    return output.squeeze().numpy()
+    return output.squeeze().numpy().astype(np.uint8)
 
-
-def warping(fn_list):
-    mask_fn, flow_fn, pred_fn = fn_list
-    mask = cv2.imread(mask_fn, cv2.IMREAD_GRAYSCALE).astype(np.float)
+def instance_warp(fn_list):
+    flow_fn, img_name_sur, img_name_des = fn_list
     flow = cv2.imread(flow_fn, -1)[:, :, ::-1].astype(np.float)
     flow = (flow[:, :, :2] - 2.0 ** 15) / 64.0
-    # new mask
-    img = torch.Tensor(mask).unsqueeze(dim=0).unsqueeze(dim=1)
     flow = torch.Tensor(flow).permute(2, 0, 1).contiguous().unsqueeze(dim=0)
+    img_id = reverse_img_dir[img_name_sur]
+    img_id_des = reverse_img_dir[img_name_des]
+    annIds = coco.getAnnIds(imgIds=[img_id], iscrowd=None)
+    annIds_des = coco.getAnnIds(imgIds=[img_id_des], iscrowd=None)
+    annos = coco.loadAnns(annIds)
+    annos_des = coco.loadAnns(annIds_des)
+    instance_ids = [anno['instance_id'] for anno in annos]
+    instance_ids_des = [anno['instance_id'] for anno in annos_des]
+    sur_color_map = np.zeros(720, 1280, 3)
+    tar_color_map = np.zeros(720, 1280, 3)
 
-    new_mask = flow_warp(img, flow)
-    print(pred_fn, new_mask.shape)
-    if not os.path.isdir(os.path.split(pred_fn)[0]):
-        os.makedirs(os.path.split(pred_fn)[0])
-    a = cv2.imwrite(pred_fn, new_mask)
-    print(a)
+    color_id = 0
+    for anno, instance_id in zip(annos, instance_ids):
+        if instance_id not in instance_ids_des:
+            continue
+
+        idx = instance_ids_des.index(instance_id)
+        anno_des = annos_des[idx]
+        mask = coco.annToMask(anno)
+        mask_des = coco.annToMask(anno_des)
+        mask = torch.Tensor(mask).unsqueeze(dim=0).unsqueeze(dim=1)
+        # print(flow.shape)
+        new_mask = flow_warp(mask, flow)
+        sur_color_map[np.where(mask==1)] = COLORS[color_id % len(COLORS)]
+        tar_color_map[np.where(new_mask==1)] = COLORS[color_id % len(COLORS)]
+        color_id += 1
+    
+    sur_save_pth = os.path.join(out_sur_file, img_name_sur[:17], img_name_sur)
+    tar_save_pth = os.path.join(out_tar_file, img_name_des[:17], img_name_des)
+    if not os.path.exists(os.path.join(out_sur_file, img_name_sur[:17])):
+        os.makedirs(os.path.join(out_sur_file, img_name_sur[:17]))
+    
+    if not os.path.exists(os.path.join(out_tar_file, img_name_des[:17])):
+        os.makedirs(os.path.join(out_tar_file, img_name_des[:17]))
+    
+    ok = cv2.imwrite(sur_save_pth, sur_color_map)
+    print(ok)
+    ok = cv2.imwrite(tar_save_pth, tar_color_map)
+    print(ok)
 
 
 def main():
-    gt_base = '/shared/xudongliu/code/semi-flow/mask'
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_Sintel_seg_track_val_my/vec'
-    pd_base = 'pd_mask/bdd-Sintel-val-new-my'
+    global reverse_img_dir
+    global coco
+    global out_sur_file
+    global out_tar_file
+    # global anno_to_instance
+
+    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_KT_seg_track_val/vec'
+    json_fn = '/data5/bdd100k/labels/seg_track/seg_track_val_new.json'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
-    if not os.path.exists(pd_base):
-        os.makedirs(pd_base)
+    out_sur_file = '/shared/xudongliu/code/semi-flow/hd3/color_mask/frame_1'
+    out_tar_file = '/shared/xudongliu/code/semi-flow/hd3/color_mask/frame_0'
+    coco = COCO(json_fn)
+
+    with open(json_fn) as f:
+        sur_dir = json.load(f)
+    
+    img_dir_list = sur_dir['images']
+
+    reverse_img_dir = {img_dir['file_name']:img_dir['id'] for img_dir in img_dir_list}
+    # anno_to_instance = { for anno_dir in anno_dir_list}
+
     args = []
 
     with open(list_file) as f:
         pair_list = f.readlines()
     
     for i, line in enumerate(pair_list):
-        gt_name = os.path.join(gt_base, line.strip(' \n').split(' ')[1].split('.')[0] + '.png')
         flow_name = os.path.join(fl_base, line.strip(' \n').split(' ')[0].split('.')[0] + '.png')
-        pd_name = os.path.join(pd_base, line.strip(' \n').split(' ')[0].split('.')[0] + '.png')
-        args.append([gt_name, flow_name, pd_name])
+        img_name_sur = os.path.split(line.strip(' \n').split(' ')[1])[-1]
+        img_name_des = os.path.split(line.strip(' \n').split(' ')[0])[-1]
+        args.append([flow_name, img_name_sur, img_name_des])
 
     pool = mp.Pool(16)
-    pool.map(warping, args)
-
+    pool.map(instance_warp, args)
 
 if __name__ == "__main__":
     main()
