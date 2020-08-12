@@ -105,7 +105,7 @@ def main():
     global out_tar_file
     # global anno_to_instance
 
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_KT_seg_track_val/vec'
+    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_Sintel_seg_track_val/vec'
     json_fn = '/data5/bdd100k/labels/seg_track/seg_track_val_new.json'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
     out_sur_file = '/shared/xudongliu/code/semi-flow/hd3/color_mask/frame_1'
