@@ -80,6 +80,7 @@ def instance_warp(fn_list):
         mask = torch.Tensor(mask).unsqueeze(dim=0).unsqueeze(dim=1)
         # print(flow.shape)
         new_mask = flow_warp(mask, flow)
+        print(mask.shape, new_mask.shape)
         sur_color_map[np.where(mask==1)] = COLORS[color_id % len(COLORS)]
         tar_color_map[np.where(new_mask==1)] = COLORS[color_id % len(COLORS)]
         color_id += 1
