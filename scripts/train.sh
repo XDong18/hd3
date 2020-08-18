@@ -8,7 +8,7 @@ python -u train.py \
   --val_root=/data5/bdd100k/images/track/train \
   --val_list=lists/seg_track_train.txt \
   --task=flow \
-  --base_lr=10 \
+  --base_lr=100 \
   --pretrain=model_zoo/hd3fc_chairs_things-0b92a7f5.pth \
   --encoder=dlaup \
   --decoder=hda \
