@@ -17,7 +17,7 @@ class HD3Model(nn.Module):
         self.decoder = decoder
         self.corr_range = corr_range
         self.context = context
-        self.criterion = torch.nn.CrossEntropyLoss()
+        self.criterion = torch.nn.BCELoss()
         self.eval_epe = EndPointError
         self.hd3net = HD3Net(task, encoder, decoder, corr_range, context,
                              self.ds)
@@ -46,7 +46,7 @@ class HD3Model(nn.Module):
                             dim=1)
 
         vgrid = vgrid.permute(0, 2, 3, 1)
-        output = F.grid_sample(x, vgrid, mode='nearest', padding_mode='border')
+        output = F.grid_sample(x, vgrid, mode='bilinear', padding_mode='border', align_corners=True)
 
         return output
 
@@ -62,30 +62,45 @@ class HD3Model(nn.Module):
         result = {}
 
         ms_prob, ms_vect = self.hd3net(torch.cat(img_list, 1))
-        sur_map, tar_map = label_list
-        sur_map = sur_map.float().requires_grad_()
+        # sur_map, tar_map = label_list
+        instance_num = len(label_list) / 2
+        sur_map_list = label_list[:instance_num]
+        tar_map_list = label_list[instance_num:]
+
+        # sur_map = sur_map.float().requires_grad_()
 
         if get_vect:
             result['vect'] = ms_vect[-1]
 
-        # add flow warp part
-        corr_range = [4, 4, 4, 4, 4]
-        scale_factor = 1 / 2**(7 - len(corr_range))
 
-        out_vect = resize_dense_vector(result['vect'] * scale_factor,
-                                        img_list[0].shape[2], img_list[0].shape[3])
-        
-        warped_map = self.flow_warp(sur_map, out_vect)
 
         if get_prob:
             result['prob'] = ms_prob[-1]
+
         if get_loss:
+            # add flow warp part
+            corr_range = [4, 4, 4, 4, 4]
+            scale_factor = 1 / 2**(7 - len(corr_range))
+            out_vect = resize_dense_vector(result['vect'] * scale_factor,
+                                            img_list[0].shape[2], img_list[0].shape[3])
+
+            total_loss = None
+            for sur_map, tar_map in zip(sur_map_list, tar_map_list):
+                sur_map = sur_map.float().requires_grad_()
+                warped_map = self.flow_warp(sur_map, out_vect)
+                if total_loss==None:
+                    total_loss = self.criterion(warped_map, tar_map.long())
+                else:
+                    total_loss += self.criterion(warped_map, tar_map.long())
+            
+            result['loss'] = total_loss
+
+
             # new crossentropy loss
-            B, C, H, W = warped_map.size()
-            warped_map = torch.nn.functional.one_hot(warped_map.long().view(B, H, W))
-            warped_map = warped_map.view(B, warped_map.size()[3], H, W).float()
-            tar_map = tar_map.view(B, H, W)
-            result['loss'] = self.criterion(warped_map, tar_map.long())
+            # B, C, H, W = warped_map.size()
+            # warped_map = torch.nn.functional.one_hot(warped_map.long().view(B, H, W))
+            # warped_map = warped_map.view(B, warped_map.size()[3], H, W).float()
+            # tar_map = tar_map.view(B, H, W)
         # if get_epe:
         #     scale_factor = 1 / 2**(self.ds - len(ms_vect) + 1)
         #     result['epe'] = self.eval_epe(ms_vect[-1] * scale_factor,

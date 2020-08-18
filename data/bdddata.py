@@ -42,16 +42,16 @@ class BDD_Data(Dataset):
     def __len__(self):
         return len(self.data_list)
 
-    def generate_instance_maps(self, img_id, img_id_des):
-        sur_map = np.zeros((720, 1280))
-        tar_map = np.zeros((720, 1280))
+    def generate_instance_maps(self, img_id, img_id_des): 
+        sur_map_list = []
+        tar_map_list = []
+
         annIds = self.coco.getAnnIds(imgIds=[img_id], iscrowd=None)
         annIds_des = self.coco.getAnnIds(imgIds=[img_id_des], iscrowd=None)
         annos = self.coco.loadAnns(annIds)
         annos_des = self.coco.loadAnns(annIds_des)
         instance_ids = [anno['instance_id'] for anno in annos]
         instance_ids_des = [anno['instance_id'] for anno in annos_des]
-        curr_instance_id = 0
         for anno, instance_id in zip(annos, instance_ids):
             if instance_id not in instance_ids_des:
                 continue
@@ -60,16 +60,10 @@ class BDD_Data(Dataset):
             anno_des = annos_des[idx]
             mask = self.coco.annToMask(anno)
             mask_des = self.coco.annToMask(anno_des)
-#             print(mask.shape)
-            sur_map[np.where(mask>0)] = curr_instance_id
-            tar_map[np.where(mask_des>0)] = curr_instance_id
-            curr_instance_id += 1
-        
-#         sur_map = np.expand_dims(sur_map, axis=-1)
-#         tar_map = np.expand_dims(tar_map, axis=-1)
-#         print(sur_map.shape)
-#         print(type(np.uint8(sur_map)))
-        return Image.fromarray(np.uint8(sur_map)), Image.fromarray(np.uint8(tar_map))
+            sur_map_list.append(Image.fromarray(np.uint8(mask)))
+            tar_map_list.append(Image.fromarray(np.uint8(mask_des)))
+
+        return sur_map_list, tar_map_list
 
     def __getitem__(self, index):
         # img_num = len(self.data_list[index])
@@ -79,9 +73,9 @@ class BDD_Data(Dataset):
         img_list.append(read_gen(join(self.data_root, self.data_list[index][1]), "image"))
         img_id = self.reverse_img_dir[os.path.split(self.data_list[index][1])[-1]]
         img_id_des = self.reverse_img_dir[os.path.split(self.data_list[index][0])[-1]]
-        sur_map, tar_map = self.generate_instance_maps(img_id, img_id_des)
-        label_list.append(sur_map)
-        label_list.append(tar_map)
+        sur_map_list, tar_map_list = self.generate_instance_maps(img_id, img_id_des)
+        label_list.extend(sur_map_list)
+        label_list.extend(tar_map_list)
 
         data = [img_list, label_list]
         data = list(self.transform(*data))
