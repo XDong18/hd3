@@ -64,6 +64,7 @@ class HD3Model(nn.Module):
         ms_prob, ms_vect = self.hd3net(torch.cat(img_list, 1))
         # sur_map, tar_map = label_list
         instance_num = len(label_list) / 2
+        print(instance_num)
         sur_map_list = label_list[:instance_num]
         tar_map_list = label_list[instance_num:]
 
