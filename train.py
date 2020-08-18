@@ -266,9 +266,9 @@ def train(train_loader, model, optimizer, epoch, batch_size):
             logger.info('Loss {loss_meter.val:.4f} '.format(loss_meter=loss_meter))
 
         writer.add_scalar('total_loss_train_batch',
-                          loss_meter.val.cpu().numpy(), current_iter)
+                          loss_meter.val, current_iter)
 
-    return loss_meter.avg.cpu().numpy()
+    return loss_meter.avg
 
 
 def validate(val_loader, model):
