@@ -19,4 +19,4 @@ python -u train.py \
   --batch_size_val=4 \
   --visual_freq=20 \
   --save_step=50 \
-  --save_path=checkpoints/seg_track_bdd
+  --save_path=checkpoints/seg_track_bdd_-1
