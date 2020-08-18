@@ -113,7 +113,7 @@ class HD3Model(nn.Module):
                 else:
                     total_loss += self.criterion(warped_map, tar_map.float())
             
-            result['loss'] = total_loss
+            result['loss'] = total_loss, instance_num
 
 
             # new crossentropy loss
