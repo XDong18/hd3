@@ -237,7 +237,8 @@ def train(train_loader, model, optimizer, epoch, batch_size):
         if loss_meter is None:
             loss_meter = AverageMeter()
 
-        loss_meter.update(total_loss.item(), img_list[0].size(0))
+        if total_loss != None:
+            loss_meter.update(total_loss.item(), img_list[0].size(0))
 
         batch_time.update(time.time() - end)
         end = time.time()
