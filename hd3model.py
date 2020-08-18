@@ -46,7 +46,8 @@ class HD3Model(nn.Module):
                             dim=1)
 
         vgrid = vgrid.permute(0, 2, 3, 1)
-        output = F.grid_sample(x, vgrid, mode='bilinear', padding_mode='border', align_corners=True)
+        # output = F.grid_sample(x, vgrid, mode='bilinear', padding_mode='border', align_corners=True)
+        output = F.grid_sample(x, vgrid, mode='bilinear', padding_mode='border')
 
         return output
 
@@ -60,7 +61,7 @@ class HD3Model(nn.Module):
                 get_epe=False,
                 get_vis=False,
                 get_instance_iou=False):
-                
+
         result = {}
 
         ms_prob, ms_vect = self.hd3net(torch.cat(img_list, 1))
