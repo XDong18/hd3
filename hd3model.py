@@ -17,7 +17,7 @@ class HD3Model(nn.Module):
         self.decoder = decoder
         self.corr_range = corr_range
         self.context = context
-        self.criterion = torch.nn.BCELoss()
+        self.criterion = torch.nn.BCEWithLogitsLoss()
         self.eval_epe = EndPointError
         self.hd3net = HD3Net(task, encoder, decoder, corr_range, context,
                              self.ds)
