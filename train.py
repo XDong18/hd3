@@ -230,7 +230,7 @@ def train(train_loader, model, optimizer, epoch, batch_size):
         total_loss = output['loss']
 
         optimizer.zero_grad()
-        if total_loss != None:
+        if total_loss is not None:
             total_loss.backward()
         optimizer.step()
 
