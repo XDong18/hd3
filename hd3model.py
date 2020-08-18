@@ -96,8 +96,9 @@ class HD3Model(nn.Module):
                     total_loss += self.criterion(warped_map, tar_map.float())
             
             result['loss'] = total_loss
+            result['num'] = instance_num
         
-        if get_instance_iou:
+        if get_instance_iou: # TODO
             corr_range = [4, 4, 4, 4, 4]
             scale_factor = 1 / 2**(7 - len(corr_range))
             out_vect = resize_dense_vector(result['vect'] * scale_factor,
@@ -112,7 +113,7 @@ class HD3Model(nn.Module):
                     total_loss += self.criterion(warped_map, tar_map.float())
             
             result['loss'] = total_loss
-            result['num'] = instance_num
+            
 
 
             # new crossentropy loss
