@@ -58,7 +58,9 @@ class HD3Model(nn.Module):
                 get_prob=False,
                 get_loss=False,
                 get_epe=False,
-                get_vis=False):
+                get_vis=False,
+                get_instance_iou=False):
+                
         result = {}
 
         ms_prob, ms_vect = self.hd3net(torch.cat(img_list, 1))
@@ -85,6 +87,22 @@ class HD3Model(nn.Module):
             out_vect = resize_dense_vector(result['vect'] * scale_factor,
                                             img_list[0].shape[2], img_list[0].shape[3])
 
+            total_loss = None
+            for sur_map, tar_map in zip(sur_map_list, tar_map_list):
+                sur_map = sur_map.float().requires_grad_()
+                warped_map = self.flow_warp(sur_map, out_vect)
+                if total_loss is None:
+                    total_loss = self.criterion(warped_map, tar_map.float())
+                else:
+                    total_loss += self.criterion(warped_map, tar_map.float())
+            
+            result['loss'] = total_loss
+        
+        if get_instance_iou:
+            corr_range = [4, 4, 4, 4, 4]
+            scale_factor = 1 / 2**(7 - len(corr_range))
+            out_vect = resize_dense_vector(result['vect'] * scale_factor,
+                                            img_list[0].shape[2], img_list[0].shape[3])
             total_loss = None
             for sur_map, tar_map in zip(sur_map_list, tar_map_list):
                 sur_map = sur_map.float().requires_grad_()
