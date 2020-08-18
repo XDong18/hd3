@@ -90,9 +90,9 @@ class HD3Model(nn.Module):
                 sur_map = sur_map.float().requires_grad_()
                 warped_map = self.flow_warp(sur_map, out_vect)
                 if total_loss==None:
-                    total_loss = self.criterion(warped_map, tar_map.long())
+                    total_loss = self.criterion(warped_map, tar_map.float())
                 else:
-                    total_loss += self.criterion(warped_map, tar_map.long())
+                    total_loss += self.criterion(warped_map, tar_map.float())
             
             result['loss'] = total_loss
 
