@@ -15,7 +15,7 @@ python -u train.py \
   --context \
   --workers=16 \
   --epochs=200 \
-  --batch_size=32 \
+  --batch_size=16 \
   --batch_size_val=4 \
   --visual_freq=20 \
   --save_step=50 \
