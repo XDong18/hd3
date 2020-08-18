@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=2,3,4,5,6,7,8,9
+export CUDA_VISIBLE_DEVICES=2,3,4,6,7,8
 python -u train.py \
   --dataset_name=KITTI \
   --train_root=/data5/bdd100k/images/track/train \
@@ -13,7 +13,7 @@ python -u train.py \
   --encoder=dlaup \
   --decoder=hda \
   --context \
-  --workers=16 \
+  --workers=18 \
   --epochs=200 \
   --batch_size=16 \
   --batch_size_val=4 \
