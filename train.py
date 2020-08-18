@@ -227,7 +227,8 @@ def train(train_loader, model, optimizer, epoch, batch_size):
         label_list = [label.to(torch.device("cuda")) for label in label_list]
 
         output = model(img_list=img_list, label_list=label_list, get_loss=True)
-        total_loss, instance_num = output['loss']
+        total_loss = output['loss']
+        instance_num = output['num']
 
         optimizer.zero_grad()
         if total_loss is not None:
