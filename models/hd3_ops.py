@@ -190,6 +190,16 @@ def _flow2distribution(flo, c):
     return out
 
 
+def mask_prob(prob, origin_mask):
+    masked_prob = prob
+    masked_prob[origin_mask.eq(0)] = 0
+    return masked_prob
+
+def generate_mask_prob(masked_prob):
+    
+
+
+
 def _prob2cornerflow(prob, normalize=True):
     # prob: [B,C,H,W]
     def indice2flow(ind, d):

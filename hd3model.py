@@ -95,7 +95,7 @@ class HD3Model(nn.Module):
                 else:
                     total_loss += self.criterion(warped_map, tar_map.float())
             
-            result['loss'] = total_loss
+            result['loss'] = total_loss / instance_num # TODO
             # result['num'] = instance_num
         
         if get_instance_iou: # TODO
