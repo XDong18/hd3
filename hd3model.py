@@ -96,7 +96,7 @@ class HD3Model(nn.Module):
                     total_loss += self.criterion(warped_map, tar_map.float())
             
             result['loss'] = total_loss
-            result['num'] = instance_num
+            # result['num'] = instance_num
         
         if get_instance_iou: # TODO
             corr_range = [4, 4, 4, 4, 4]

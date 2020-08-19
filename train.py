@@ -228,7 +228,7 @@ def train(train_loader, model, optimizer, epoch, batch_size):
 
         output = model(img_list=img_list, label_list=label_list, get_loss=True)
         total_loss = output['loss']
-        instance_num = output['num']
+        # instance_num = output['num']
 
         optimizer.zero_grad()
         if total_loss is not None:
@@ -240,7 +240,7 @@ def train(train_loader, model, optimizer, epoch, batch_size):
             loss_meter = AverageMeter()
 
         if total_loss is not None:
-            loss_meter.update(loss.item() / instance_num, img_list[0].size(0))
+            loss_meter.update(loss.item(), img_list[0].size(0))
 
         batch_time.update(time.time() - end)
         end = time.time()
