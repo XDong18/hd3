@@ -24,7 +24,7 @@ class HD3Model(nn.Module):
     
     def extend_map(self, label_map, corr_range, size): 
         # TODO constrain origin_map
-        # print(size)
+
         resized_label_map = torch.nn.functional.interpolate(label_map, size, mode='bilinear')
         # resized_origin_map = torch.nn.functional.interpolate(origin_map, size, mode='bilinear')
 
@@ -38,7 +38,6 @@ class HD3Model(nn.Module):
         for dy in y_range:
             for dx in x_range:
                 temp_label_map = torch.zeros((B, H, W), device=label_map.device)
-                # print(temp_label_map.size(), resized_label_map.size())
                 if dx!=0 and dy!=0:
                     temp_label_map[:, dy:, dx:] = resized_label_map[:, :-dy, :-dx]
                 elif dx==0 and dy==0:
@@ -68,6 +67,7 @@ class HD3Model(nn.Module):
         ms_prob, ms_vect = self.hd3net(torch.cat(img_list, 1))
         # sur_map, tar_map = label_list
         instance_num = int(len(label_list) / 2)
+        print(instance_num)
         # print(instance_num)
         sur_map_list = label_list[:instance_num]
         tar_map_list = label_list[instance_num:]
