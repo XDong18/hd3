@@ -9,5 +9,5 @@ python -u inference.py \
   --workers=16 \
   --context \
   --flow_format=png \
-  --model_path=model_zoo/model_zoo/hd3fc_chairs_things-0b92a7f5.pth \
+  --model_path=model_zoo/hd3fc_chairs_things-0b92a7f5.pth \
   --save_folder=predictions/chairs_thngs_gap_1
