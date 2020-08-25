@@ -89,7 +89,6 @@ class HD3Model(nn.Module):
                 # each level loss
                 for i, tar_map in enumerate(tar_map_list):
                     if tar_map.max()==-1:
-                        # print(i, 'pass!', instance_num)
                         continue
                     # print('prob', prob_map.size())
                     tar_size = (prob_map.size(2), prob_map.size(3))
