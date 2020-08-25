@@ -62,6 +62,7 @@ class BDD_Data(Dataset):
             mask_des = self.coco.annToMask(anno_des)
             sur_map_list.append(Image.fromarray(np.uint8(mask)))
             tar_map_list.append(Image.fromarray(np.uint8(mask_des)))
+        
 
         return sur_map_list, tar_map_list
 

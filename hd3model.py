@@ -67,7 +67,6 @@ class HD3Model(nn.Module):
         ms_prob, ms_vect = self.hd3net(torch.cat(img_list, 1))
         # sur_map, tar_map = label_list
         instance_num = int(len(label_list) / 2)
-        print(instance_num)
         # print(instance_num)
         sur_map_list = label_list[:instance_num]
         tar_map_list = label_list[instance_num:]
@@ -89,6 +88,8 @@ class HD3Model(nn.Module):
             for prob_map, corr_range in zip(ms_prob, corr_range_list):
                 # each level loss
                 for tar_map in tar_map_list:
+                    if tar_map.max()==-1:
+                        continue
                     # print('prob', prob_map.size())
                     tar_size = (prob_map.size(2), prob_map.size(3))
                     extended_tar_map = self.extend_map(tar_map.float(), corr_range, tar_size)

@@ -91,6 +91,36 @@ def get_logger():
     logger.addHandler(handler)
     return logger
 
+def my_collate(batch):
+    data_list = [item[0] for item in batch]
+    target_list = [item[1] for item in batch]
+
+    img_0_list = [data_item[0].unsqueeze(0) for data_item in data_list]
+    img_1_list = [data_item[1].unsqueeze(0) for data_item in data_list]
+    data = [torch.cat(img_0_list, dim=0), torch.cat(img_1_list, dim=0)]
+
+    num_list = [len(target_item) // 2 for target_item in target_list]
+    max_num = max(num_list)
+
+    C, H, W = data_list[0][0].size()
+    pad_imgs = [-torch.ones((C, H, W))]
+
+    new_target_list = []
+    for target_item, num in zip(target_list, num_list):
+        target_item_f = target_item[:num]
+        target_item_b = target_item[num:]
+        if num < max_num:
+            pad_list = pad_imgs * (max_num - num)
+            target_item_f.extend(pad_list)
+            target_item_b.extend(pad_list)
+        new_target_list.extend(target_item_f + target_item_b)
+    
+    target = []
+    for i in range(max_num):
+        img_list = [new_target_item[i].unsqueeze(0) for new_target_item in new_target_list]
+        target.append(torch.cat(img_list, dim=0))
+
+    return [data, target]
 
 def main():
     global args, logger, writer
@@ -155,7 +185,8 @@ def main():
         batch_size=args.batch_size,
         shuffle=True,
         num_workers=args.workers,
-        pin_memory=True)
+        pin_memory=True,
+        collate_fn=my_collate)
     if args.evaluate:
         val_data = datasets.BDD_Data(
             mode=args.task,
@@ -169,7 +200,8 @@ def main():
             batch_size=args.batch_size_val,
             shuffle=False,
             num_workers=args.workers,
-            pin_memory=True)
+            pin_memory=True,
+            collate_fn=my_collate)
 
     ### Go! ###
     scheduler = get_lr_scheduler(optimizer, args.dataset_name)
