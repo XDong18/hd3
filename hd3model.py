@@ -99,11 +99,6 @@ class HD3Model(nn.Module):
                         total_loss += self.criterion(prob_map, extended_tar_map)
             
             result['loss'] = total_loss
-            # if total_loss is None:
-            #     result['loss'] = total_loss
-            # else:
-            #     result['loss'] = total_loss / instance_num 
-            # result['num'] = instance_num
         
         # if get_instance_iou: 
         #     corr_range = [4, 4, 4, 4, 4]

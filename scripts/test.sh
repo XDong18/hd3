@@ -9,5 +9,5 @@ python -u inference.py \
   --workers=16 \
   --context \
   --flow_format=png \
-  --model_path=model_zoo/hd3fc_chairs_things-0b92a7f5.pth \
-  --save_folder=predictions/chairs_thngs_gap_1
+  --model_path=model_zoo//shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_0.5_new/model_latest.pth \
+  --save_folder=predictions/semi_lr_0.5_gap_1
