@@ -187,8 +187,7 @@ def main():
         batch_size=args.batch_size,
         shuffle=True,
         num_workers=args.workers,
-        pin_memory=True,
-        collate_fn=my_collate)
+        pin_memory=True)
     if args.evaluate:
         val_data = datasets.BDD_Data(
             mode=args.task,
@@ -202,8 +201,7 @@ def main():
             batch_size=args.batch_size_val,
             shuffle=False,
             num_workers=args.workers,
-            pin_memory=True,
-            collate_fn=my_collate)
+            pin_memory=True)
 
     ### Go! ###
     scheduler = get_lr_scheduler(optimizer, args.dataset_name)
@@ -270,7 +268,7 @@ def train(train_loader, model, optimizer, epoch, batch_size):
 
         optimizer.zero_grad()
         if total_loss is not None:
-            loss = total_loss #TODO 
+            loss = total_loss
             loss.backward()
         optimizer.step()
 
