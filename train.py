@@ -120,6 +120,8 @@ def my_collate(batch):
     target = []
     for i in range(max_num):
         img_list = [new_target_item[i].unsqueeze(0) for new_target_item in new_target_list]
+        for temp in img_list:
+            print(temp.dtype)
         target.append(torch.cat(img_list, dim=0))
 
     return [data, target]
