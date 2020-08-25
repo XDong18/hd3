@@ -112,10 +112,10 @@ def my_collate(batch):
         target_item_b = target_item[num:]
         if num < max_num:
             pad_list = pad_imgs * (max_num - num)
-            print(pad_list[0].dtype)
+            # print(pad_list[0].dtype)
             target_item_f.extend(pad_list)
             target_item_b.extend(pad_list)
-        new_target_list.extend(target_item_f + target_item_b)
+        new_target_list.append(target_item_f + target_item_b)
     
     target = []
     for i in range(max_num):
