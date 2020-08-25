@@ -14,8 +14,8 @@ import torch.backends.cudnn as cudnn
 import torch.optim
 import torch.utils.data
 
-import data.origin_trans as datasets
-import data.flowtransforms as transforms
+import data.hd3data as datasets
+import data.origin_trans as transforms
 import origin_model as models
 from utils.utils import *
 from models.hd3_ops import *
