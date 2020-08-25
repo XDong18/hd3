@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=2,3,4,6,7,8
+export CUDA_VISIBLE_DEVICES=5,6,7,8
 python -u train.py \
   --dataset_name=KITTI \
   --train_root=/data5/bdd100k/images/track/train \
@@ -8,12 +8,12 @@ python -u train.py \
   --val_root=/data5/bdd100k/images/track/train \
   --val_list=lists/seg_track_train.txt \
   --task=flow \
-  --base_lr=100 \
+  --base_lr=0.1 \
   --pretrain=model_zoo/hd3fc_chairs_things-0b92a7f5.pth \
   --encoder=dlaup \
   --decoder=hda \
   --context \
-  --workers=18 \
+  --workers=16 \
   --epochs=200 \
   --batch_size=16 \
   --batch_size_val=4 \
