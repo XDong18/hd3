@@ -15,8 +15,8 @@ import torch.optim
 import torch.utils.data
 
 import data.hd3data as datasets
-import data.origin_trans as transforms
-import origin_model as models
+import data.flowtransforms as transforms
+import hd3model as models
 from utils.utils import *
 from models.hd3_ops import *
 import utils.flowlib as fl
@@ -89,7 +89,6 @@ def main():
             for i, l in enumerate(fnames)
         ]
         names = [l.split('.')[0] for l in names]
-        # print(join(args.data_root, fnames[0].split(' ')[0]))
         input_size = cv2.imread(join(args.data_root,
                                      fnames[0].split(' ')[0])).shape
 
@@ -135,7 +134,6 @@ def main():
 
     vis_folder = os.path.join(args.save_folder, 'vis')
     vec_folder = os.path.join(args.save_folder, 'vec')
-    prob_folder = os.path.join(args.save_folder, 'prob')
     check_makedirs(vis_folder)
     check_makedirs(vec_folder)
 
@@ -167,8 +165,7 @@ def main():
                 img_list=resized_img_list,
                 label_list=label_list,
                 get_vect=True,
-                get_epe=args.evaluate,
-                get_prob=True)
+                get_epe=args.evaluate)
             scale_factor = 1 / 2**(7 - len(corr_range))
             output['vect'] = resize_dense_vector(output['vect'] * scale_factor,
                                                  img_size[0, 1],
@@ -192,28 +189,18 @@ def main():
                         batch_time=batch_time))
 
             pred_vect = output['vect'].data.cpu().numpy()
-            pred_prob = output['prob'].data.cpu().numpy()
             pred_vect = np.transpose(pred_vect, (0, 2, 3, 1))
-            pred_prob = np.transpose(pred_prob, (0, 2, 3, 1))
             curr_bs = pred_vect.shape[0]
 
             for idx in range(curr_bs):
                 curr_idx = i * args.batch_size + idx
                 curr_vect = pred_vect[idx]
-                curr_prob = pred_prob[idx]
 
                 # make folders
                 vis_sub_folder = join(vis_folder, sub_folders[curr_idx])
                 vec_sub_folder = join(vec_folder, sub_folders[curr_idx])
-                prob_sub_folder = join(prob_folder, sub_folders[curr_idx])
                 check_makedirs(vis_sub_folder)
                 check_makedirs(vec_sub_folder)
-                check_makedirs(prob_sub_folder)
-                
-                # save prob files
-                prob_fn = join(prob_sub_folder, names[curr_idx] + '.png')
-                print(curr_prob.shape)
-                cv2.imwrite(prob_fn, curr_prob * 255)
 
                 # save visualzation (disparity transformed to flow here)
                 vis_fn = join(vis_sub_folder, names[curr_idx] + '.png')
@@ -221,7 +208,7 @@ def main():
                     vis_flo = fl.flow_to_image(curr_vect)
                 else:
                     vis_flo = fl.flow_to_image(fl.disp2flow(curr_vect))
-                # vis_flo = cv2.cvtColor(vis_flo, cv2.COLOR_RGB2BGR)
+                # vis_flo = cv2.cvtColor(vis_flo, cv2.COLOR_RGB2BGR) #TODO changed
                 # cv2.imwrite(vis_fn, vis_flo)
 
                 # save point estimates
