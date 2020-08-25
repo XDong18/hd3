@@ -104,7 +104,7 @@ def my_collate(batch):
 
     C, H, W = data_list[0][0].size()
     # print(data_list[0][0].dtype)
-    pad_imgs = [-torch.ones((C, H, W), dtype=data_list[0][0].dtype)]
+    pad_imgs = [-torch.ones((C, H, W), dtype=torch.uint8)]
 
     new_target_list = []
     for target_item, num in zip(target_list, num_list):
@@ -120,8 +120,6 @@ def my_collate(batch):
     target = []
     for i in range(max_num):
         img_list = [new_target_item[i].unsqueeze(0) for new_target_item in new_target_list]
-        for temp in img_list:
-            print(temp.dtype)
         target.append(torch.cat(img_list, dim=0))
 
     return [data, target]
