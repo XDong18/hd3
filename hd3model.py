@@ -38,6 +38,7 @@ class HD3Model(nn.Module):
         for dy in y_range:
             for dx in x_range:
                 temp_label_map = torch.zeros((B, H, W), device=label_map.device)
+                print(temp_label_map.size(), resized_label_map.size())
                 temp_label_map[:, dy:, dx:] = resized_label_map[:, :-dy, :-dx]
                 out_list.append(temp_label_map.eq(1).float().unsqueeze(3).to(label_map.device))
         
