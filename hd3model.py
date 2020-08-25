@@ -89,15 +89,17 @@ class HD3Model(nn.Module):
                 # each level loss
                 for i, tar_map in enumerate(tar_map_list):
                     if tar_map.max()==-1:
-                        print(i, 'pass!', instance_num)
+                        # print(i, 'pass!', instance_num)
                         continue
                     # print('prob', prob_map.size())
                     tar_size = (prob_map.size(2), prob_map.size(3))
                     extended_tar_map = self.extend_map(tar_map.float(), corr_range, tar_size)
                     if total_loss is None:
                         total_loss = self.criterion(prob_map, extended_tar_map)
+                        print('first loss:', total_loss.item())
                     else:
                         total_loss += self.criterion(prob_map, extended_tar_map)
+                        print('add loss:', self.criterion(prob_map, extended_tar_map).item())
             
             result['loss'] = total_loss
             # if total_loss is None:
