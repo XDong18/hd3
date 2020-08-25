@@ -103,7 +103,7 @@ def my_collate(batch):
     max_num = max(num_list)
 
     C, H, W = data_list[0][0].size()
-    print(data_list[0][0].dtype)
+    # print(data_list[0][0].dtype)
     pad_imgs = [-torch.ones((C, H, W), dtype=data_list[0][0].dtype)]
 
     new_target_list = []
@@ -112,6 +112,7 @@ def my_collate(batch):
         target_item_b = target_item[num:]
         if num < max_num:
             pad_list = pad_imgs * (max_num - num)
+            print(pad_list)
             target_item_f.extend(pad_list)
             target_item_b.extend(pad_list)
         new_target_list.extend(target_item_f + target_item_b)
