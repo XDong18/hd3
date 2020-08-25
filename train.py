@@ -253,6 +253,10 @@ def train(train_loader, model, optimizer, epoch, batch_size):
     for i, (img_list, label_list) in enumerate(train_loader):
         if img_list[0].shape[0] < batch_size:
             continue
+
+        if len(label_list) < 2:
+            continue
+
         data_time.update(time.time() - end)
         current_iter = (epoch - 1) * len(train_loader) + i + 1
         max_iter = args.epochs * len(train_loader)
@@ -266,7 +270,7 @@ def train(train_loader, model, optimizer, epoch, batch_size):
 
         optimizer.zero_grad()
         if total_loss is not None:
-            loss = total_loss.mean()
+            loss = total_loss #TODO 
             loss.backward()
         optimizer.step()
 
