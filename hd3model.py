@@ -50,7 +50,7 @@ class HD3Model(nn.Module):
 
                 out_list.append(temp_label_map.eq(1).float().unsqueeze(3).to(label_map.device))
         
-        out = torch.cat(out_list, dim=3).premute(0, 3, 1, 2)
+        out = torch.cat(out_list, dim=3).permute(0, 3, 1, 2)
         return out
 
     def forward(self,
@@ -89,7 +89,7 @@ class HD3Model(nn.Module):
             for prob_map, corr_range in zip(ms_prob, corr_range_list):
                 # each level loss
                 for tar_map in tar_map_list:
-                    print('prob', prob_map.size())
+                    # print('prob', prob_map.size())
                     tar_size = (prob_map.size(2), prob_map.size(3))
                     extended_tar_map = self.extend_map(tar_map.float(), corr_range, tar_size)
                     if total_loss is None:
