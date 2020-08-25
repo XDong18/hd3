@@ -74,7 +74,7 @@ class HD3Model(nn.Module):
         if get_loss:
             # add flow warp part
             corr_range_list = [4, 4, 4, 4, 4]
-            scale_factor = 1 / 2**(7 - len(corr_range))
+
             total_loss = None
 
             for prob_map, corr_range in zip(ms_prob, corr_range_list):
