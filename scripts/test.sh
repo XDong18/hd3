@@ -9,5 +9,5 @@ python -u inference.py \
   --workers=16 \
   --context \
   --flow_format=png \
-  --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_0.001_new_fix/model_latest.pth \
+  --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_0.001_new/model_latest.pth \
   --save_folder=predictions/semi_lr_0.001_gap_1_fix
