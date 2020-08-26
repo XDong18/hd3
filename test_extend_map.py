@@ -45,3 +45,6 @@ def main():
     tensor_img = torch.from_numpy(np_img).permute(2,0,1).unsqueeze(0)
     out = extend_map(tensor_img, 1, (32, 32))
     print(out)
+
+if __name__ == "__main__":
+    main()
