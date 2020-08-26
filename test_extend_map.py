@@ -6,6 +6,7 @@ from utils.visualizer import get_visualization
 from utils.utils import *
 from models.hd3_ops import *
 import cv2
+import os
 
 
 def extend_map(label_map, corr_range, size): 
@@ -42,10 +43,13 @@ def extend_map(label_map, corr_range, size):
 def main():
     file_name = '/shared/xudongliu/code/semi-flow/mask/b1c81faa-3df17267/b1c81faa-3df17267-0000001.png'
     np_img = cv2.imread(file_name, cv2.IMREAD_GRAYSCALE)
-    print(np_img.shape)
+    # print(np_img.shape)
     tensor_img = torch.from_numpy(np_img).unsqueeze(0).unsqueeze(0)
-    out = extend_map(tensor_img.float(), 1, (5, 5))
-    print(out)
+    out = extend_map(tensor_img.float(), 1, np_img.shape)
+    np_out = out.unsqueeze(0).permute(1,2,0).numpy()
+    for i in range(9):
+        out_fn = os.path.join('test_imgs', str(i)+'.png')
+        cv2.imwrite(out_fn, np_out[:,:,i] * 255)
 
 if __name__ == "__main__":
     main()
