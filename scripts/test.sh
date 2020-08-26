@@ -10,4 +10,4 @@ python -u inference.py \
   --context \
   --flow_format=png \
   --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_0.001_new/model_latest.pth \
-  --save_folder=predictions/semi_lr_0.001_gap_1_fix
+  --save_folder=predictions/semi_lr_0.001_gap_1_fix_epoch8
