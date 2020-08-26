@@ -25,6 +25,7 @@ def extend_map(label_map, corr_range, size):
 
         pad = torch.nn.ConstantPad2d(0, corr_range)
         resized_label_map = pad(resized_label_map)
+        print(resized_label_map.size())
 
         for dy in y_range:
             for dx in x_range:
