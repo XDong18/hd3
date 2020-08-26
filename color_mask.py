@@ -88,13 +88,13 @@ def instance_warp(fn_list):
     
     sur_save_pth = os.path.join(out_sur_file, img_name_sur[:17], img_name_sur)
     tar_save_pth = os.path.join(out_tar_file, img_name_des[:17], img_name_des)
-    if not os.path.exists(os.path.join(out_sur_file, img_name_sur[:17])):
-        os.makedirs(os.path.join(out_sur_file, img_name_sur[:17]))
+    # if not os.path.exists(os.path.join(out_sur_file, img_name_sur[:17])):
+    #     os.makedirs(os.path.join(out_sur_file, img_name_sur[:17]))
     
     if not os.path.exists(os.path.join(out_tar_file, img_name_des[:17])):
         os.makedirs(os.path.join(out_tar_file, img_name_des[:17]))
     
-    ok = cv2.imwrite(sur_save_pth, sur_color_map)
+    # ok = cv2.imwrite(sur_save_pth, sur_color_map)
     print(ok)
     ok = cv2.imwrite(tar_save_pth, tar_color_map)
     print(ok)
@@ -107,11 +107,11 @@ def main():
     global out_tar_file
     # global anno_to_instance
 
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/semi_lr_0.001_gap_1_fix/vec'
+    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/semi_lr_0.001_gap_1_fix_epoch100/vec'
     json_fn = '/data5/bdd100k/labels/seg_track/seg_track_val_new.json'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
-    out_sur_file = '/shared/xudongliu/code/semi-flow/hd3/semi_color_mask_lr_0.001/frame_1'
-    out_tar_file = '/shared/xudongliu/code/semi-flow/hd3/semi_color_mask_lr_0.001/frame_0'
+    out_sur_file = '/shared/xudongliu/code/semi-flow/hd3/generated_color_map/semi_lr_0.001_e_100/frame_1'
+    out_tar_file = '/shared/xudongliu/code/semi-flow/hd3/generated_color_map/semi_lr_0.001_e_100/frame_0'
     coco = COCO(json_fn)
 
     with open(json_fn) as f:
