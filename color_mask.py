@@ -95,7 +95,7 @@ def instance_warp(fn_list):
         os.makedirs(os.path.join(out_tar_file, img_name_des[:17]))
     
     # ok = cv2.imwrite(sur_save_pth, sur_color_map)
-    print(ok)
+    # print(ok)
     ok = cv2.imwrite(tar_save_pth, tar_color_map)
     print(ok)
 
