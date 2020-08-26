@@ -42,6 +42,7 @@ def extend_map(label_map, corr_range, size):
 def main():
     file_name = '/shared/xudongliu/code/semi-flow/mask/b1c81faa-3df17267/b1c81faa-3df17267-0000001.png'
     np_img = cv2.imread(file_name)
+    print(np_img.shape)
     tensor_img = torch.from_numpy(np_img).permute(2,0,1).unsqueeze(0)
     out = extend_map(tensor_img.float(), 1, (32, 32))
     print(out)
