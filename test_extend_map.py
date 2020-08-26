@@ -22,19 +22,15 @@ def extend_map(label_map, corr_range, size):
         x_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
         y_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
 
+        pad = torch.nn.ConstantPad2d(0, corr_range)
+        resized_label_map = pad(resized_label_map)
+
         for dy in y_range:
             for dx in x_range:
-                temp_label_map = torch.zeros((B, H, W), device=label_map.device)
-                if dx!=0 and dy!=0:
-                    temp_label_map[:, dy:, dx:] = resized_label_map[:, :-dy, :-dx]
-                elif dx==0 and dy==0:
-                    temp_label_map[:,:,:] = resized_label_map[:,:,:]
-                elif dx==0 and dy!=0:
-                    temp_label_map[:, dy:, :] = resized_label_map[:, :-dy, :]
-                elif dx!=0 and dy==0:
-                    temp_label_map[:, :, dx:] = resized_label_map[:, :, :-dx]
+                temp_label_map = pad(torch.zeros((B, H, W), device=label_map.device))
+                temp_label_map[:, corr_range:-corr_range, corr_range:-corr_range] = resized_label_map[:, corr_range+dy:corr_range+dy+H, corr_range+dx:corr_range+dx+W]
 
-                out_list.append(temp_label_map.eq(1).float().unsqueeze(3).to(label_map.device))
+                out_list.append(temp_label_map[:, corr_range:-corr_range, corr_range:-corr_range].eq(1).float().unsqueeze(3).to(label_map.device))
         
         out = torch.cat(out_list, dim=3).permute(0, 3, 1, 2)
         return out
