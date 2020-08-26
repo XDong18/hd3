@@ -46,7 +46,7 @@ def main():
     # print(np_img.shape)
     tensor_img = torch.from_numpy(np_img).unsqueeze(0).unsqueeze(0)
     out = extend_map(tensor_img.float(), 1, np_img.shape)
-    np_out = out.unsqueeze(0).permute(1,2,0).numpy()
+    np_out = out.squeeze(0).permute(1,2,0).numpy()
     for i in range(9):
         out_fn = os.path.join('test_imgs', str(i)+'.png')
         cv2.imwrite(out_fn, np_out[:,:,i] * 255)
