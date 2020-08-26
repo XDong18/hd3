@@ -44,7 +44,7 @@ def main():
     np_img = cv2.imread(file_name, cv2.IMREAD_GRAYSCALE)
     print(np_img.shape)
     tensor_img = torch.from_numpy(np_img).unsqueeze(0).unsqueeze(0)
-    out = extend_map(tensor_img.float(), 1, (32, 32))
+    out = extend_map(tensor_img.float(), 1, (5, 5))
     print(out)
 
 if __name__ == "__main__":
