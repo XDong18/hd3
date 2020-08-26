@@ -16,6 +16,7 @@ def extend_map(label_map, corr_range, size):
         # resized_origin_map = torch.nn.functional.interpolate(origin_map, size, mode='bilinear')
 
         B, _, H, W = resized_label_map.size()
+        print(H, W)
         resized_label_map = resized_label_map.squeeze(1)
 
         out_list = []
