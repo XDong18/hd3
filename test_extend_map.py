@@ -23,7 +23,7 @@ def extend_map(label_map, corr_range, size):
         x_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
         y_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
 
-        pad = torch.nn.ConstantPad2d(0, corr_range)
+        pad = torch.nn.ConstantPad2d(corr_range, 0)
         resized_label_map = pad(resized_label_map)
         print(resized_label_map.size())
 
