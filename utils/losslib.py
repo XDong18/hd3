@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 
 
 class FocalLoss(nn.Module):
@@ -28,7 +29,10 @@ class FocalLoss(nn.Module):
     def forward(self, inputs, targets):
         P = F.sigmoid(inputs)
         log_P = P.log()
+        print(log_P.min(), log_P.max())
         log_P = torch.clamp(log_P, min=-100, max=0)
+        print('clamped', log_P.min(), log_P.max())
+
         # print(log_P.min())
         probs = log_P * targets
         # batch_loss = -(torch.pow((1-P), self.gamma)) * probs
@@ -54,4 +58,10 @@ class edge_bce(nn.Module):
         super(edge_bce, self).__init__()
         self.window_size = window_size
         self.size_average = size_average
+        sobel_x_numpy = np.array([1,0,-1,2,0,-2,1,0,-1]).reshape(3,3)
+        sobel_y_numpy = np.array([1,0,-1,2,0,-2,1,0,-1]).reshape(3,3).T
+        self.sobel_x = torch.from_numpy(sobel_x_numpy).unsqueeze(0).unsqueeze(0)
+        self.sobel_y = torch.from_numpy(sobel_y_numpy).unsqueeze(0).unsqueeze(0)
+    
+    def forward(self, input, target, input_mask):
         
