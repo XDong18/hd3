@@ -5,7 +5,7 @@ from hd3losses import *
 from utils.visualizer import get_visualization
 from utils.utils import *
 from models.hd3_ops import *
-from utils.losslib import FocalLoss
+from utils.losslib import edge_bce
 
 
 class HD3Model(nn.Module):
@@ -18,8 +18,8 @@ class HD3Model(nn.Module):
         self.decoder = decoder
         self.corr_range = corr_range
         self.context = context
-        self.criterion = torch.nn.BCEWithLogitsLoss() # TODO change loss function
-        # self.criterion = FocalLoss(gamma=1)
+        # self.criterion = torch.nn.BCEWithLogitsLoss() # TODO change loss function
+        self.criterion = edge_bce(edge_weight=10)
         self.eval_epe = EndPointError
         self.hd3net = HD3Net(task, encoder, decoder, corr_range, context,
                              self.ds)

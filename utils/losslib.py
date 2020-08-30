@@ -54,15 +54,16 @@ class FocalLoss(nn.Module):
         return loss
 
 class edge_bce(nn.Module):
-    def __init__(self, window_size=5, size_average=True):
+    def __init__(self, edge_weight, window_size=9, size_average=True):
         super(edge_bce, self).__init__()
         self.window_size = window_size
         self.size_average = size_average
+        self.edge_weight = edge_weight
         sobel_x_numpy = np.array([1,0,-1,2,0,-2,1,0,-1]).reshape(3,3)
         sobel_y_numpy = np.array([1,0,-1,2,0,-2,1,0,-1]).reshape(3,3).T
-        sobel_x = torch.from_numpy(sobel_x_numpy).unsqueeze(0).unsqueeze(0)
-        sobel_y = torch.from_numpy(sobel_y_numpy).unsqueeze(0).unsqueeze(0)
-        self.window = torch.ones((1, 1, window_size, window_size))
+        sobel_x = torch.from_numpy(sobel_x_numpy).unsqueeze(0).unsqueeze(0).float()
+        sobel_y = torch.from_numpy(sobel_y_numpy).unsqueeze(0).unsqueeze(0).float()
+        self.window = torch.ones((1, 1, window_size, window_size)).float()
         self.edge_x = F.conv2d(sobel_x, self.window, padding=window_size-1)
         self.edge_y = F.conv2d(sobel_y, self.window, padding=window_size-1)
     
@@ -70,7 +71,13 @@ class edge_bce(nn.Module):
         boundary_mask = (torch.abs(F.conv2d(target_mask, self.edge_x, padding=(self.edge_x.size(2)-1)//2)) + \
                         torch.abs(F.conv2d(target_mask, self.edge_y, padding=(self.edge_y.size(2)-1)//2)))
         boundary_mask[boundary_mask>0] = 1
+        bcewithlogits_loss = torch.nn.BCEWithLogitsLoss(reduction='sum')
+        edge_loss = self.edge_weight * bcewithlogits_loss(input*boundary_mask, target*boundary_mask)
+        non_edge_loss = bcewithlogits_loss(input*(1-boundary_mask), target*(1-boundary_mask))
+        loss = (edge_loss + non_edge_loss) / input.nelement()
+        return loss
 
+'/shared/xudongliu/code/semi-flow/b_out.png'
 
         
         
