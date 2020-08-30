@@ -26,7 +26,7 @@ class FocalLoss(nn.Module):
         self.size_average = size_average
 
     def forward(self, inputs, targets):
-        P = nn.Sigmoid(inputs)
+        P = F.sigmoid(inputs)
         log_P = P.log()
         probs = log_P * targets
         batch_loss = -(torch.pow((1-P), self.gamma))*probs 
