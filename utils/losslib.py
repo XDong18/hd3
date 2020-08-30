@@ -29,9 +29,9 @@ class FocalLoss(nn.Module):
     def forward(self, inputs, targets):
         P = F.sigmoid(inputs)
         log_P = P.log()
-        print(log_P.min(), log_P.max())
+        print(log_P.min().item(), log_P.max().item())
         log_P = torch.clamp(log_P, min=-100, max=0)
-        print('clamped', log_P.min(), log_P.max())
+        print('clamped', log_P.min().item(), log_P.max().item())
 
         # print(log_P.min())
         probs = log_P * targets
@@ -60,10 +60,13 @@ class edge_bce(nn.Module):
         self.size_average = size_average
         sobel_x_numpy = np.array([1,0,-1,2,0,-2,1,0,-1]).reshape(3,3)
         sobel_y_numpy = np.array([1,0,-1,2,0,-2,1,0,-1]).reshape(3,3).T
-        self.sobel_x = torch.from_numpy(sobel_x_numpy).unsqueeze(0).unsqueeze(0)
-        self.sobel_y = torch.from_numpy(sobel_y_numpy).unsqueeze(0).unsqueeze(0)
+        sobel_x = torch.from_numpy(sobel_x_numpy).unsqueeze(0).unsqueeze(0)
+        sobel_y = torch.from_numpy(sobel_y_numpy).unsqueeze(0).unsqueeze(0)
+        self.window = torch.ones((1, 1, window_size, window_size))
+        self.edge_x = F.conv2d(sobel_x, self.window, padding=window_size-1)
+        self.edge_y = F.conv2d(sobel_y, self.window, padding=window_size-1)
     
-    # def forward(self, input, target, input_mask):
+    def forward(self, input, target, input_mask):
+
         
-    #     pass
         
