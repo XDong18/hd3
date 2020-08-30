@@ -29,10 +29,12 @@ class FocalLoss(nn.Module):
         P = F.sigmoid(inputs)
         log_P = P.log()
         probs = log_P * targets
-        batch_loss = -(torch.pow((1-P), self.gamma))*probs 
+        batch_loss = -(torch.pow((1-P), self.gamma))*probs
 
         if self.size_average:
             loss = batch_loss.mean()
         else:
             loss = batch_loss.sum()
+        
+        print(loss.item())
         return loss
