@@ -19,7 +19,7 @@ class HD3Model(nn.Module):
         self.corr_range = corr_range
         self.context = context
         # self.criterion = torch.nn.BCEWithLogitsLoss() # TODO change loss function
-        self.criterion = FocalLoss()
+        self.criterion = FocalLoss(gamma=1)
         self.eval_epe = EndPointError
         self.hd3net = HD3Net(task, encoder, decoder, corr_range, context,
                              self.ds)
