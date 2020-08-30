@@ -31,7 +31,8 @@ class FocalLoss(nn.Module):
         log_P = torch.clamp(log_P, min=-100, max=0)
         # print(log_P.min())
         probs = log_P * targets
-        batch_loss = -(torch.pow((1-P), self.gamma)) * probs
+        # batch_loss = -(torch.pow((1-P), self.gamma)) * probs
+        batch_loss = -probs
 
         neg_P = 1 - P
         log_neg_P = neg_P.log()
