@@ -28,9 +28,17 @@ class FocalLoss(nn.Module):
     def forward(self, inputs, targets):
         P = F.sigmoid(inputs)
         log_P = P.log()
+        log_P = torch.clamp(log_P, min=-100, max=0)
         # print(log_P.min())
         probs = log_P * targets
-        batch_loss = -(torch.pow((1-P), self.gamma))*probs
+        batch_loss = -(torch.pow((1-P), self.gamma)) * probs
+
+        neg_P = 1 - P
+        log_neg_P = neg_P.log()
+        log_neg_P = torch.clamp(log_neg_P, min=-100, max=0)
+        neg_targets = 1 - targets
+        neg_probs = log_neg_P * neg_targets
+        batch_loss += -(torch.pow((1-neg_P), self.gamma)) * neg_probs
 
         if self.size_average:
             loss = batch_loss.mean()
@@ -39,3 +47,10 @@ class FocalLoss(nn.Module):
         
         # print(loss.item())
         return loss
+
+class edge_bce(nn.Module):
+    def __init__(self, window_size=5, size_average=True):
+        super(edge_bce, self).__init__()
+        self.window_size = window_size
+        self.size_average = size_average
+        
