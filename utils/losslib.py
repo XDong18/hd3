@@ -66,7 +66,7 @@ class edge_bce(nn.Module):
         self.edge_x = F.conv2d(sobel_x, self.window, padding=window_size-1)
         self.edge_y = F.conv2d(sobel_y, self.window, padding=window_size-1)
     
-    def forward(self, input, target, input_mask):
+    # def forward(self, input, target, input_mask):
 
         
         
