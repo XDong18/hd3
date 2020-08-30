@@ -5,6 +5,7 @@ from hd3losses import *
 from utils.visualizer import get_visualization
 from utils.utils import *
 from models.hd3_ops import *
+from utils.losslib import FocalLoss
 
 
 class HD3Model(nn.Module):
@@ -17,7 +18,8 @@ class HD3Model(nn.Module):
         self.decoder = decoder
         self.corr_range = corr_range
         self.context = context
-        self.criterion = torch.nn.BCEWithLogitsLoss()
+        # self.criterion = torch.nn.BCEWithLogitsLoss() # TODO change loss function
+        self.criterion = FocalLoss()
         self.eval_epe = EndPointError
         self.hd3net = HD3Net(task, encoder, decoder, corr_range, context,
                              self.ds)
@@ -76,7 +78,7 @@ class HD3Model(nn.Module):
             result['prob'] = ms_prob[-1]
 
         if get_loss:
-            # add flow warp part
+
             corr_range_list = [4, 4, 4, 4, 4]
 
             total_loss = None
@@ -86,7 +88,7 @@ class HD3Model(nn.Module):
                 for i, tar_map in enumerate(tar_map_list):
                     if tar_map.max()==-1:
                         continue
-                    # print('prob', prob_map.size())
+                    
                     tar_size = (prob_map.size(2), prob_map.size(3))
                     extended_tar_map = self.extend_map(tar_map.float(), corr_range, tar_size)
                     if total_loss is None:
