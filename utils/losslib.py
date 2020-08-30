@@ -63,5 +63,7 @@ class edge_bce(nn.Module):
         self.sobel_x = torch.from_numpy(sobel_x_numpy).unsqueeze(0).unsqueeze(0)
         self.sobel_y = torch.from_numpy(sobel_y_numpy).unsqueeze(0).unsqueeze(0)
     
-    def forward(self, input, target, input_mask):
+    # def forward(self, input, target, input_mask):
+        
+    #     pass
         
