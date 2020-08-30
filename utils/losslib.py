@@ -28,6 +28,7 @@ class FocalLoss(nn.Module):
     def forward(self, inputs, targets):
         P = F.sigmoid(inputs)
         log_P = P.log()
+        print(log_P.min())
         probs = log_P * targets
         batch_loss = -(torch.pow((1-P), self.gamma))*probs
 
@@ -36,5 +37,5 @@ class FocalLoss(nn.Module):
         else:
             loss = batch_loss.sum()
         
-        print(loss.item())
+        # print(loss.item())
         return loss
