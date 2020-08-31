@@ -64,8 +64,8 @@ class edge_bce(nn.Module):
         sobel_x = torch.from_numpy(sobel_x_numpy).unsqueeze(0).unsqueeze(0).float()
         sobel_y = torch.from_numpy(sobel_y_numpy).unsqueeze(0).unsqueeze(0).float()
         self.window = torch.ones((1, 1, window_size, window_size)).float()
-        self.edge_x = F.conv2d(sobel_x, self.window, padding=window_size-1)
-        self.edge_y = F.conv2d(sobel_y, self.window, padding=window_size-1)
+        self.edge_x = F.conv2d(sobel_x, self.window, padding=window_size-1).cuda()
+        self.edge_y = F.conv2d(sobel_y, self.window, padding=window_size-1).cuda()
     
     def forward(self, input, target, target_mask):
         boundary_mask = (torch.abs(F.conv2d(target_mask, self.edge_x, padding=(self.edge_x.size(2)-1)//2)) + \
