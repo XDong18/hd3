@@ -92,9 +92,9 @@ class HD3Model(nn.Module):
                     tar_size = (prob_map.size(2), prob_map.size(3))
                     extended_tar_map = self.extend_map(tar_map.float(), corr_range, tar_size)
                     if total_loss is None:
-                        total_loss = self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map, tar_size, mode='bilinear'))
+                        total_loss = self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map.float(), tar_size, mode='bilinear'))
                     else:
-                        total_loss += self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map, tar_size, mode='bilinear'))
+                        total_loss += self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map.float(), tar_size, mode='bilinear'))
             
             result['loss'] = total_loss
         
