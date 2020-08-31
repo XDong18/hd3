@@ -98,7 +98,7 @@ def main():
     global coco
     # global anno_to_instance
 
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/semi_lr_0.001_gap_1_fix_epoch100/vec'
+    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/semi_lr_0.001_gap_1_edge_epoch6/vec'
     json_fn = '/data5/bdd100k/labels/seg_track/seg_track_val_new.json'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
     coco = COCO(json_fn)

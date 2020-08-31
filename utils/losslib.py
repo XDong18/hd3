@@ -77,7 +77,5 @@ class edge_bce(nn.Module):
         loss = (edge_loss + non_edge_loss) / input.nelement()
         return loss
 
-'/shared/xudongliu/code/semi-flow/b_out.png'
-
         
         
