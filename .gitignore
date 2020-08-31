@@ -2,7 +2,9 @@
 .history/
 *.jpg
 *.png
-*.jso
+*.json
+*.ipynb
+*.out.*
 *.flo
 *.pyc
 *.txt

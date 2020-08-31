@@ -46,7 +46,7 @@ def flow_warp(x, flo):
                         dim=1)
 
     vgrid = vgrid.permute(0, 2, 3, 1)
-    output = F.grid_sample(x, vgrid, mode='nearest', padding_mode='border', align_corners=True)
+    output = F.grid_sample(x, vgrid, mode='nearest', padding_mode='border')
 
     return output.squeeze().numpy().astype(np.uint8)
 
@@ -86,8 +86,9 @@ def instance_warp(fn_list):
         instance_iou = iou([e_mask_des], [e_new_mask], [0])
 #         total_iou += instance_iou[0][0]
 #         total_num += 1
-        total_ious[anno['category_id']] += instance_iou[0][0]
-        total_nums[anno['category_id']] += 1
+        
+        total_ious[anno['category_id'] - 1] += instance_iou[0][0]
+        total_nums[anno['category_id'] - 1] += 1
     
     return [total_ious, total_nums]
 
@@ -97,9 +98,9 @@ def main():
     global coco
     # global anno_to_instance
 
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/fc_pre_Sintel_seg_track_val_my/vec'
+    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/semi_lr_0.001_gap_1_fix_epoch100/vec'
     json_fn = '/data5/bdd100k/labels/seg_track/seg_track_val_new.json'
-    list_file = '/shared/xudongliu/code/semi-flow/hd3/lists/seg_track_val_new.txt'
+    list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
     coco = COCO(json_fn)
 
     with open(json_fn) as f:
@@ -123,10 +124,11 @@ def main():
 
     pool = mp.Pool(16)
     results = pool.map(instance_warp, args)
-    iou_list = np.sum(np.concatenate([np.expand_dims(result[0], aixs=0) for result in results], axis=0), axis=0)
-    num_list = np.sum(np.concatenate([np.expand_dims(result[1], aixs=0) for result in results], axis=0), axis=0)
+    iou_list = np.sum(np.concatenate([np.expand_dims(result[0], axis=0) for result in results], axis=0), axis=0)
+    num_list = np.sum(np.concatenate([np.expand_dims(result[1], axis=0) for result in results], axis=0), axis=0)
 
     print(iou_list / num_list)
+    print(num_list)
 
 if __name__ == "__main__":
     main()
