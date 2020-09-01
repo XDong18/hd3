@@ -1,7 +1,7 @@
 export CUDA_VISIBLE_DEVICES=4,5,6,7
 python -u inference.py \
   --task=flow \
-  --data_root=/data5/bdd100k/images/track/val \
+  --data_root=/shared/xudongliu/bdd_part/val \
   --data_list=/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt \
   --encoder=dlaup \
   --decoder=hda \
