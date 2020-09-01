@@ -10,7 +10,7 @@ python -u inference.py \
   --context \
   --flow_format=png \
   --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_1e-3_edge/model_latest.pth \
-  --save_folder=predictions/semi_lr_0.001_gap_1_edge_epoch6
+  --save_folder=predictions/semi_lr_0.001_gap_1_edge_epochx
 
 python instance_iou.py
 
