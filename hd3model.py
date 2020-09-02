@@ -72,7 +72,7 @@ class HD3Model(nn.Module):
         # sur_map = sur_map.float().requires_grad_()
 
         if get_vect:
-            result['vect'] = ms_vect[-1]
+            result['vect'] = ms_vect[:] # TODO ms_vect[-1]
 
         if get_prob:
             result['prob'] = ms_prob[-1]
