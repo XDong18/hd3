@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=6,7,8,9
+export CUDA_VISIBLE_DEVICES=0,7,8,9
 python -u train.py \
   --dataset_name=KITTI \
   --train_root=/data5/bdd100k/images/track/train \
