@@ -9,8 +9,8 @@ python -u inference.py \
   --workers=16 \
   --context \
   --flow_format=png \
-  --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_1e-3_xia/model_latest.pth \
-  --save_folder=predictions/semi_lr_0.001_gap_1_xia_epoch1
+  --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_1e-3_xia_bce/model_latest.pth \
+  --save_folder=predictions/seg_track_bdd_1e-3_xia_bce_epoch15
 
 python instance_iou.py
 
