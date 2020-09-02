@@ -177,7 +177,7 @@ def main():
             # output['vect'] = resize_dense_vector(output['vect'] * scale_factor,
             #                                      img_size[0, 1],
             #                                      img_size[0, 0])
-            for i in range(corr_range):
+            for i in range(len(corr_range)):
                 scale_factor = 1 / 2**(7 - i - 1)
                 output['vect'][i] = resize_dense_vector(output['vect'][i] * scale_factor,
                                                  img_size[0, 1],
@@ -239,8 +239,8 @@ def main():
                 fn_suffix = 'png'
                 if args.task == 'flow':
                     fn_suffix = args.flow_format
-                vect_fn = join(vec_sub_folder,
-                               names[curr_idx] + '.' + fn_suffix)
+                # vect_fn = join(vec_sub_folder,
+                #                names[curr_idx] + '.' + fn_suffix)
                 vect_fn_list = []
                 for folder in vec_sub_folder_list:
                     vect_fn_list.append(join(folder, names[curr_idx] + '.' + fn_suffix))
