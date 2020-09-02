@@ -134,8 +134,15 @@ def main():
 
     vis_folder = os.path.join(args.save_folder, 'vis')
     vec_folder = os.path.join(args.save_folder, 'vec')
+    vec_folder_4 = os.path.join(args.save_folder, 'vec4')
+    vec_folder_3 = os.path.join(args.save_folder, 'vec3')
+    vec_folder_2 = os.path.join(args.save_folder, 'vec2')
+    vec_folder_1 = os.path.join(args.save_folder, 'vec1')
+    vec_folder_list = [vec_folder_1, vec_folder_2, vec_folder_3, vec_folder_4, vec_folder]
     check_makedirs(vis_folder)
-    check_makedirs(vec_folder)
+    # check_makedirs(vec_folder)
+    for folder in vec_folder_list:
+        check_makedirs(folder)
 
     # start testing
     logger.info('>>>>>>>>>>>>>>>> Start Test >>>>>>>>>>>>>>>>')
@@ -166,8 +173,13 @@ def main():
                 label_list=label_list,
                 get_vect=True,
                 get_epe=args.evaluate)
-            scale_factor = 1 / 2**(7 - len(corr_range))
-            output['vect'] = resize_dense_vector(output['vect'] * scale_factor,
+            # scale_factor = 1 / 2**(7 - len(corr_range))
+            # output['vect'] = resize_dense_vector(output['vect'] * scale_factor,
+            #                                      img_size[0, 1],
+            #                                      img_size[0, 0])
+            for i in range(corr_range):
+                scale_factor = 1 / 2**(7 - i - 1)
+                output['vect'][i] = resize_dense_vector(output['vect'][i] * scale_factor,
                                                  img_size[0, 1],
                                                  img_size[0, 0])
 
@@ -188,26 +200,38 @@ def main():
                         data_time=data_time,
                         batch_time=batch_time))
 
-            pred_vect = output['vect'].data.cpu().numpy()
-            pred_vect = np.transpose(pred_vect, (0, 2, 3, 1))
-            curr_bs = pred_vect.shape[0]
+            # pred_vect = output['vect'].data.cpu().numpy()
+            # pred_vect = np.transpose(pred_vect, (0, 2, 3, 1))
+            # curr_bs = pred_vect.shape[0]
+            pred_vect_list = []
+            for pred_v in output['vect']:
+                pred_vect_list.append(np.transpose(pred_v.data.cpu().numpy(), (0, 2, 3, 1)))
+            
+            curr_bs = pred_vect_list[0].shape[0]
 
             for idx in range(curr_bs):
                 curr_idx = i * args.batch_size + idx
-                curr_vect = pred_vect[idx]
+                # curr_vect = pred_vect[idx]
+                curr_vect_list = [pred_v[idx] for pred_v in pred_vect_list]
 
                 # make folders
                 vis_sub_folder = join(vis_folder, sub_folders[curr_idx])
-                vec_sub_folder = join(vec_folder, sub_folders[curr_idx])
+                # vec_sub_folder = join(vec_folder, sub_folders[curr_idx])
+                vec_sub_folder_list = []
+                for folder in vec_folder_list:
+                    vec_sub_folder_list.append(join(folder, sub_folders[curr_idx]))
+
                 check_makedirs(vis_sub_folder)
-                check_makedirs(vec_sub_folder)
+                # check_makedirs(vec_sub_folder)
+                for folder in vec_sub_folder_list:
+                    check_makedirs(folder)
 
                 # save visualzation (disparity transformed to flow here)
-                vis_fn = join(vis_sub_folder, names[curr_idx] + '.png')
-                if args.task == 'flow':
-                    vis_flo = fl.flow_to_image(curr_vect)
-                else:
-                    vis_flo = fl.flow_to_image(fl.disp2flow(curr_vect))
+                # vis_fn = join(vis_sub_folder, names[curr_idx] + '.png')
+                # if args.task == 'flow':
+                #     vis_flo = fl.flow_to_image(curr_vect)
+                # else:
+                #     vis_flo = fl.flow_to_image(fl.disp2flow(curr_vect))
                 # vis_flo = cv2.cvtColor(vis_flo, cv2.COLOR_RGB2BGR) #TODO changed
                 # cv2.imwrite(vis_fn, vis_flo)
 
@@ -217,16 +241,25 @@ def main():
                     fn_suffix = args.flow_format
                 vect_fn = join(vec_sub_folder,
                                names[curr_idx] + '.' + fn_suffix)
+                vect_fn_list = []
+                for folder in vec_sub_folder_list:
+                    vect_fn_list.append(join(folder, names[curr_idx] + '.' + fn_suffix))
+
                 if args.task == 'flow':
                     if fn_suffix == 'png':
                         # save png format flow
                         mask_blob = np.ones(
                             (img_size[idx][1], img_size[idx][0]),
                             dtype=np.uint16)
-                        fl.write_kitti_png_file(vect_fn, curr_vect, mask_blob)
+                        # fl.write_kitti_png_file(vect_fn, curr_vect, mask_blob)
+                        for curr_vect, vect_f in zip(curr_vect_list, vect_fn_list):
+                            fl.write_kitti_png_file(vect_f, curr_vect, mask_blob)
+
                     else:
                         # save flo format flow
                         fl.write_flow(curr_vect, vect_fn)
+                        for curr_vect, vect_f in zip(curr_vect_list, vect_fn_list):
+                            fl.write_flow(curr_vect, vect_f)
                 else:
                     # save disparity map
                     cv2.imwrite(vect_fn,
