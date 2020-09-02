@@ -19,8 +19,8 @@ class HD3Model(nn.Module):
         self.decoder = decoder
         self.corr_range = corr_range
         self.context = context
-        # self.criterion = torch.nn.BCEWithLogitsLoss() # TODO change loss function
-        self.criterion = edge_bce(edge_weight=10)
+        self.criterion = torch.nn.BCEWithLogitsLoss() # TODO change loss function
+        # self.criterion = edge_bce(edge_weight=10)
         self.eval_epe = EndPointError
         self.hd3net = HD3Net(task, encoder, decoder, corr_range, context,
                              self.ds)
@@ -114,9 +114,9 @@ class HD3Model(nn.Module):
                     tar_size = (prob_map.size(2), prob_map.size(3))
                     extended_tar_map = self.extend_map(origin_map.float(), tar_map.float(), corr_range, tar_size)
                     if total_loss is None:
-                        total_loss = self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map.float(), tar_size, mode='bilinear'))
+                        total_loss = self.criterion(prob_map, extended_tar_map)
                     else:
-                        total_loss += self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map.float(), tar_size, mode='bilinear'))
+                        total_loss += self.criterion(prob_map, extended_tar_map)
             
             result['loss'] = total_loss
         
