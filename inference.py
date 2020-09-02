@@ -179,7 +179,7 @@ def main():
             #                                      img_size[0, 0])
             for level_i in range(len(corr_range)):
                 scale_factor = 1 / 2**(7 - level_i - 1)
-                output['vect'][i] = resize_dense_vector(output['vect'][i] * scale_factor,
+                output['vect'][i] = resize_dense_vector(output['vect'][level_i] * scale_factor,
                                                  img_size[0, 1],
                                                  img_size[0, 0])
 
