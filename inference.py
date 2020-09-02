@@ -177,8 +177,8 @@ def main():
             # output['vect'] = resize_dense_vector(output['vect'] * scale_factor,
             #                                      img_size[0, 1],
             #                                      img_size[0, 0])
-            for i in range(len(corr_range)):
-                scale_factor = 1 / 2**(7 - i - 1)
+            for level_i in range(len(corr_range)):
+                scale_factor = 1 / 2**(7 - level_i - 1)
                 output['vect'][i] = resize_dense_vector(output['vect'][i] * scale_factor,
                                                  img_size[0, 1],
                                                  img_size[0, 0])
@@ -257,7 +257,7 @@ def main():
 
                     else:
                         # save flo format flow
-                        fl.write_flow(curr_vect, vect_fn)
+                        # fl.write_flow(curr_vect, vect_fn)
                         for curr_vect, vect_f in zip(curr_vect_list, vect_fn_list):
                             fl.write_flow(curr_vect, vect_f)
                 else:
