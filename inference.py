@@ -179,13 +179,13 @@ def main():
             #                                      img_size[0, 1],
             #                                      img_size[0, 0])
 
-            # TODO to delete>>>>>>>>:
-            prob_out = output['prob'].data.cpu().numpy()
-            np.save('prob_map.npy', prob_out)
-            vect_out = output['vect'][-1].data.cpu().numpy()
-            np.save('vect_map.npy', vect_out)
-            exit(0)
-            #<<<<<<< delete
+            # # TODO to delete>>>>>>>>:
+            # prob_out = output['prob'].data.cpu().numpy()
+            # np.save('prob_map.npy', prob_out)
+            # vect_out = output['vect'][-1].data.cpu().numpy()
+            # np.save('vect_map.npy', vect_out)
+            # exit(0)
+            # #<<<<<<< delete
 
             for level_i in range(len(corr_range)):
                 scale_factor = 1 / 2**(7 - level_i - 1)
