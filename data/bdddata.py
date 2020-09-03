@@ -72,8 +72,8 @@ class BDD_Data(Dataset):
         label_list = []
         img_list.append(read_gen(join(self.data_root, self.data_list[index][0]), "image"))
         img_list.append(read_gen(join(self.data_root, self.data_list[index][1]), "image"))
-        img_id = self.reverse_img_dir[os.path.split(self.data_list[index][1])[-1]]
-        img_id_des = self.reverse_img_dir[os.path.split(self.data_list[index][0])[-1]]
+        img_id = self.reverse_img_dir[os.path.split(self.data_list[index][0])[-1]]
+        img_id_des = self.reverse_img_dir[os.path.split(self.data_list[index][1])[-1]]
         sur_map_list, tar_map_list = self.generate_instance_maps(img_id, img_id_des)
         label_list.extend(sur_map_list)
         label_list.extend(tar_map_list)
