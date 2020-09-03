@@ -182,6 +182,8 @@ def main():
             # TODO to delete>>>>>>>>:
             prob_out = output['prob'].data.cpu().numpy()
             np.save('prob_map.npy', prob_out)
+            vect_out = output['vect'][-1].data.cpu().numpy()
+            np.save('vect_map.npy', vect_out)
             exit(0)
             #<<<<<<< delete
 
