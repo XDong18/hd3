@@ -172,11 +172,19 @@ def main():
                 img_list=resized_img_list,
                 label_list=label_list,
                 get_vect=True,
+                get_prob=True,
                 get_epe=args.evaluate)
             # scale_factor = 1 / 2**(7 - len(corr_range))
             # output['vect'] = resize_dense_vector(output['vect'] * scale_factor,
             #                                      img_size[0, 1],
             #                                      img_size[0, 0])
+
+            # TODO to delete>>>>>>>>:
+            prob_out = output['prob'].data.cpu().numpy()
+            np.save('prob_map.npy', prob_out)
+            exit(0)
+            #<<<<<<< delete
+
             for level_i in range(len(corr_range)):
                 scale_factor = 1 / 2**(7 - level_i - 1)
                 output['vect'][level_i] = resize_dense_vector(output['vect'][level_i] * scale_factor,
@@ -185,6 +193,7 @@ def main():
 
             if args.evaluate:
                 avg_epe.update(output['epe'].mean().data, img_list[0].size(0))
+            
 
             batch_time.update(time.time() - end)
             end = time.time()
