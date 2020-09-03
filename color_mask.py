@@ -117,7 +117,7 @@ def main():
 
     args = get_parser()
 
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/semi_lr_0.001_gap_1_xia_epoch1/vec'
+    fl_base = args.fl_base
     json_fn = '/shared/xudongliu/bdd_part/seg_track_val_new.json'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
     out_sur_file = ''
