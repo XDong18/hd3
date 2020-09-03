@@ -25,52 +25,53 @@ class HD3Model(nn.Module):
         self.hd3net = HD3Net(task, encoder, decoder, corr_range, context,
                              self.ds)
     
-    # def extend_map(self, label_map, origin_map, corr_range, size): 
-    #     # TODO constrain origin_map
-
-    #     resized_label_map = torch.nn.functional.interpolate(label_map, size, mode='bilinear')
-    #     resized_origin_map = torch.nn.functional.interpolate(origin_map, size, mode='bilinear')
-
-    #     B, _, H, W = resized_label_map.size()
-    #     resized_label_map = resized_label_map.squeeze(1)
-    #     resized_origin_map = resized_origin_map.squeeze(1)
-
-    #     pad = torch.nn.ConstantPad2d(corr_range, 0)
-    #     resized_label_map = pad(resized_label_map)
-    #     resized_origin_map = pad(resized_origin_map)
-
-    #     out_list = []
-    #     x_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
-    #     y_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
-
-    #     for dy in y_range:
-    #         for dx in x_range:
-    #             temp_label_map = pad(torch.zeros((B, H, W), device=label_map.device))
-    #             temp_label_map[:, corr_range:-corr_range, corr_range:-corr_range] = resized_label_map[:, corr_range+dy:corr_range+dy+H, corr_range+dx:corr_range+dx+W]
-    #             out_list.append(temp_label_map[:, corr_range:-corr_range, corr_range:-corr_range].eq(1).float().unsqueeze(3).to(label_map.device))
-
-        
-    #     out = torch.cat(out_list, dim=3).permute(0, 3, 1, 2)
-    #     return out
-
-    def extend_map(self, ori_map, tar_map, corr_range, size): 
+    def extend_map(self, label_map, origin_map, corr_range, size): 
         # TODO constrain origin_map
 
-        ori_map = F.interpolate(ori_map, size, mode='nearest')
-        tar_map = F.interpolate(tar_map, size, mode='nearest')
+        resized_label_map = torch.nn.functional.interpolate(label_map, size, mode='nearest')
+        resized_origin_map = torch.nn.functional.interpolate(origin_map, size, mode='nearest')
 
-        B, _, H, W = tar_map.size()
-        # K
-        kernel_size = 2 * corr_range + 1
-        # [B, 1, H, W] --> [B, K * K, H * W]
-        unfolded_tar_map = F.unfold(tar_map, kernel_size=kernel_size,
-                                    padding=corr_range)
-        # [B, K * K, H, W]
-        unfolded_tar_map = unfolded_tar_map.view(B, -1, H, W)
+        B, _, H, W = resized_label_map.size()
+        resized_label_map = resized_label_map.squeeze(1)
+        # resized_origin_map = resized_origin_map.squeeze(1)
 
-        # [B, K * K, H, W]
-        label = (ori_map == unfolded_tar_map).float()
-        return label
+        pad = torch.nn.ConstantPad2d(corr_range, 0)
+        resized_label_map = pad(resized_label_map)
+        # resized_origin_map = pad(resized_origin_map)
+
+        out_list = []
+        x_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
+        y_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
+
+        for dy in y_range:
+            for dx in x_range:
+                temp_label_map = torch.zeros((B, H, W), device=label_map.device)
+                temp_label_map[:] = resized_label_map[:, corr_range+dy:corr_range+dy+H, corr_range+dx:corr_range+dx+W]
+                out_list.append(temp_label_map[:].eq(1).float().unsqueeze(3).to(label_map.device))
+
+        
+        out = torch.cat(out_list, dim=3).permute(0, 3, 1, 2)
+        out = (out == resized_origin_map).float()
+        return out
+
+    # def extend_map(self, ori_map, tar_map, corr_range, size): 
+    #     # TODO constrain origin_map
+
+    #     ori_map = F.interpolate(ori_map, size, mode='nearest')
+    #     tar_map = F.interpolate(tar_map, size, mode='nearest')
+
+    #     B, _, H, W = tar_map.size()
+    #     # K
+    #     kernel_size = 2 * corr_range + 1
+    #     # [B, 1, H, W] --> [B, K * K, H * W]
+    #     unfolded_tar_map = F.unfold(tar_map, kernel_size=kernel_size,
+    #                                 padding=corr_range)
+    #     # [B, K * K, H, W]
+    #     unfolded_tar_map = unfolded_tar_map.view(B, -1, H, W)
+
+    #     # [B, K * K, H, W]
+    #     label = (ori_map == unfolded_tar_map).float()
+    #     return label
 
     def forward(self,
                 img_list,
@@ -112,7 +113,7 @@ class HD3Model(nn.Module):
                         continue
                     
                     tar_size = (prob_map.size(2), prob_map.size(3))
-                    extended_tar_map = self.extend_map(origin_map.float(), tar_map.float(), corr_range, tar_size)
+                    extended_tar_map = self.extend_map(tar_map.float(), origin_map.float(), corr_range, tar_size)
                     if total_loss is None:
                         # total_loss = self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map.float(), tar_size, mode='nearest'))
                         total_loss = self.criterion(prob_map, extended_tar_map)
