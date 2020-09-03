@@ -10,8 +10,13 @@ python -u inference.py \
   --context \
   --flow_format=png \
   --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_1e-3_xia_bce/model_latest.pth \
-  --save_folder=predictions/seg_track_bdd_1e-3_xia_bce_epoch15
+  --save_folder=predictions/seg_track_bdd_1e-3_xia_bce_epoch150
 
-python instance_iou.py
+python instance_iou.py \
+  --fl_base=predictions/seg_track_bdd_1e-3_xia_bce_epoch150
+
+python color_mask.py \
+  --fl_base=predictions/seg_track_bdd_1e-3_xia_bce_epoch150 \
+  --out_dir=generated_color_map/seg_track_bdd_1e-3_xia_bce_epoch150/frame_0
 
 

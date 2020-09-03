@@ -6,9 +6,17 @@ import multiprocessing as mp
 from torch.nn import functional as F
 from pycocotools.coco import COCO
 import json
+from argparse import ArgumentParser
 
 COLORS = np.array([[255,255,255], [0,255,255],[255,0,255],[255,255,0],[255,125,50],[125,255,50],[50,255,125],[255,50,125],[125,50,255],\
         [50, 125, 255]])
+
+def get_parser():
+    parser = ArgumentParser(description='generate color mask')
+    parser.add_argument('--fl_base', type=str, help='flow base')
+    parser.add_argument('--out_dir', type=str, help='out_tar_file')
+    return parser.parse_args()
+
 
 def readFlow(name):
     f = open(name, 'rb')
@@ -107,11 +115,13 @@ def main():
     global out_tar_file
     # global anno_to_instance
 
+    args = get_parser()
+
     fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/semi_lr_0.001_gap_1_xia_epoch1/vec'
     json_fn = '/shared/xudongliu/bdd_part/seg_track_val_new.json'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
-    out_sur_file = '/shared/xudongliu/code/semi-flow/hd3/generated_color_map/semi_lr_0.001_gap_1_xia_epoch1/frame_1'
-    out_tar_file = '/shared/xudongliu/code/semi-flow/hd3/generated_color_map/semi_lr_0.001_gap_1_xia_epoch1/frame_0'
+    out_sur_file = ''
+    out_tar_file = args.out_dir
     coco = COCO(json_fn)
 
     with open(json_fn) as f:

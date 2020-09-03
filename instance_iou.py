@@ -7,6 +7,12 @@ from torch.nn import functional as F
 from pycocotools.coco import COCO
 from pycocotools.mask import *
 import json
+from argparse import ArgumentParser
+
+def get_parser():
+    parser = ArgumentParser(description='instance iou')
+    parser.add_argument('--fl_base', type=str, help='flow base')
+    return parser.parse_args()
 
 def readFlow(name):
     f = open(name, 'rb')
@@ -97,8 +103,8 @@ def main():
     global reverse_img_dir
     global coco
     # global anno_to_instance
-
-    fl_base = '/shared/xudongliu/code/semi-flow/hd3/predictions/seg_track_bdd_1e-3_xia_bce_epoch15/vec'
+    args = get_parser()
+    fl_base = args.fl_base
     json_fn = '/shared/xudongliu/bdd_part/seg_track_val_new.json'
     list_file = '/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt'
     coco = COCO(json_fn)
