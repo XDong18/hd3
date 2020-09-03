@@ -13,10 +13,10 @@ python -u inference.py \
   --save_folder=predictions/seg_track_bdd_1e-3_xia_bce_epoch150
 
 python instance_iou.py \
-  --fl_base=predictions/seg_track_bdd_1e-3_xia_bce_epoch150
+  --fl_base=predictions/seg_track_bdd_1e-3_xia_bce_epoch150/vec
 
 python color_mask.py \
-  --fl_base=predictions/seg_track_bdd_1e-3_xia_bce_epoch150 \
+  --fl_base=predictions/seg_track_bdd_1e-3_xia_bce_epoch150/vec \
   --out_dir=generated_color_map/seg_track_bdd_1e-3_xia_bce_epoch150/frame_0
 
 
