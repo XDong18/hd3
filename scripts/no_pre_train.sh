@@ -1,11 +1,11 @@
 export CUDA_VISIBLE_DEVICES=1,2,3,4
 python -u train.py \
   --dataset_name=KITTI \
-  --train_root=/data5/bdd100k/images/track/train \
+  --train_root=/shared/xudongliu/bdd_part/train \
   --train_list=lists/seg_track_train.txt \
   --train_coco=seg_track_train_new.json \
   --val_coco=/data5/bdd100k/labels/seg_track/seg_track_val_new.json \
-  --val_root=/data5/bdd100k/images/track/train \
+  --val_root=/shared/xudongliu/bdd_part/train \
   --val_list=lists/seg_track_train.txt \
   --task=flow \
   --base_lr=1e-3 \
