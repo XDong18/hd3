@@ -4,7 +4,7 @@ python -u train.py \
   --train_root=/shared/xudongliu/bdd_part/train \
   --train_list=lists/seg_track_train.txt \
   --train_coco=seg_track_train_new.json \
-  --val_coco=/data5/bdd100k/labels/seg_track/seg_track_val_new.json \
+  --val_coco=/shared/xudongliu/bdd_part/seg_track_val_new.json \
   --val_root=/shared/xudongliu/bdd_part/train \
   --val_list=lists/seg_track_train.txt \
   --task=flow \
