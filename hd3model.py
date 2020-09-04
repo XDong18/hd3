@@ -35,7 +35,7 @@ class HD3Model(nn.Module):
         resized_label_map = resized_label_map.squeeze(1)
         # resized_origin_map = resized_origin_map.squeeze(1)
 
-        pad = torch.nn.ConstantPad2d(corr_range, 0)
+        pad = torch.nn.ConstantPad2d(corr_range, -1)
         resized_label_map = pad(resized_label_map)
         # resized_origin_map = pad(resized_origin_map)
 
@@ -47,7 +47,7 @@ class HD3Model(nn.Module):
             for dx in x_range:
                 temp_label_map = torch.zeros((B, H, W), device=label_map.device)
                 temp_label_map[:] = resized_label_map[:, corr_range+dy:corr_range+dy+H, corr_range+dx:corr_range+dx+W]
-                out_list.append(temp_label_map[:].eq(1).float().unsqueeze(3).to(label_map.device))
+                out_list.append(temp_label_map[:].unsqueeze(3).to(label_map.device))
 
         
         out = torch.cat(out_list, dim=3).permute(0, 3, 1, 2)
