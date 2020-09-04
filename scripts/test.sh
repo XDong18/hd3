@@ -9,14 +9,14 @@ python -u inference.py \
   --workers=16 \
   --context \
   --flow_format=png \
-  --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_1e-3_me_bce/model_latest.pth \
-  --save_folder=predictions/seg_track_bdd_1e-3_me_bce_epoch30
-
-python instance_iou.py \
-  --fl_base=predictions/seg_track_bdd_1e-3_me_bce_epoch30/vec
+  --model_path=/shared/xudongliu/code/semi-flow/hd3/checkpoints/seg_track_bdd_1e-3_me_bce_-1/model_latest.pth \
+  --save_folder=predictions/seg_track_bdd_1e-3_me_bce_-1_epoch5
 
 python color_mask.py \
-  --fl_base=predictions/seg_track_bdd_1e-3_me_bce_epoch30/vec \
-  --out_dir=generated_color_map/seg_track_bdd_1e-3_me_bce_epoch30/frame_0
+  --fl_base=predictions/seg_track_bdd_1e-3_me_bce_-1_epoch5/vec \
+  --out_dir=generated_color_map/seg_track_bdd_1e-3_me_bce_-1_epoch5/frame_0
+
+python instance_iou.py \
+  --fl_base=predictions/seg_track_bdd_1e-3_me_bce_-1_epoch5/vec
 
 
