@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=1,2,3,4
+export CUDA_VISIBLE_DEVICES=1
 python -u train.py \
   --dataset_name=KITTI \
   --train_root=/shared/xudongliu/bdd_part/train \
@@ -19,4 +19,4 @@ python -u train.py \
   --batch_size_val=16 \
   --visual_freq=20 \
   --save_step=50 \
-  --save_path=checkpoints/seg_track_bdd_1e-3_me_bce_-1_collate
+  --save_path=checkpoints/seg_track_bdd_1e-3_me_bce_-1_collate_batch4
