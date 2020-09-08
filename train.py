@@ -187,7 +187,9 @@ def main():
         batch_size=args.batch_size,
         shuffle=True,
         num_workers=args.workers,
-        pin_memory=True)
+        pin_memory=True,
+        collate_fn=my_collate)
+
     if args.evaluate:
         val_data = datasets.BDD_Data(
             mode=args.task,
@@ -201,7 +203,8 @@ def main():
             batch_size=args.batch_size_val,
             shuffle=False,
             num_workers=args.workers,
-            pin_memory=True)
+            pin_memory=True,
+            collate_fn=my_collate)
 
     ### Go! ###
     scheduler = get_lr_scheduler(optimizer, args.dataset_name)
