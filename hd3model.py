@@ -43,8 +43,8 @@ class HD3Model(nn.Module):
         x_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
         y_range = list(range(corr_range + 1))[::-1] + [-1 - p for p in range(corr_range)]
 
-        for dy in y_range:
-            for dx in x_range:
+        for dy in y_range[::-1]:
+            for dx in x_range[::-1]:
                 temp_label_map = torch.zeros((B, H, W), device=label_map.device)
                 temp_label_map[:] = resized_label_map[:, corr_range+dy:corr_range+dy+H, corr_range+dx:corr_range+dx+W]
                 out_list.append(temp_label_map[:].unsqueeze(3).to(label_map.device))
@@ -119,7 +119,7 @@ class HD3Model(nn.Module):
                         # total_loss += self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map.float(), tar_size, mode='nearest'))
                         total_loss += self.criterion(prob_map, extended_tar_map)
 
-            print('loss in hd3model.py', total_loss)
+            # print('loss in hd3model.py', total_loss)
             result['loss'] = total_loss
         
         # if get_instance_iou: 
