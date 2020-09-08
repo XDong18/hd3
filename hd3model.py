@@ -121,7 +121,7 @@ class HD3Model(nn.Module):
                         # total_loss += self.criterion(prob_map, extended_tar_map, torch.nn.functional.interpolate(tar_map.float(), tar_size, mode='nearest'))
                         total_loss = self.criterion(prob_map, extended_tar_map)
 
-
+            print('loss in hd3model.py', total_loss)
             result['loss'] = total_loss
         
         # if get_instance_iou: 
