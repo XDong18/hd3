@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=5,6,7,8
+export CUDA_VISIBLE_DEVICES=1,2,3,4
 python -u inference.py \
   --task=flow \
   --data_root=/shared/xudongliu/bdd_part/val \
