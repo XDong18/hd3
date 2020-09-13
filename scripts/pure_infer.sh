@@ -1,5 +1,5 @@
 export CUDA_VISIBLE_DEVICES=1,2,3,4
-python -u inference.py \
+python -u com_inference.py \
   --task=flow \
   --data_root=/shared/xudongliu/bdd_part/val \
   --data_list=/shared/xudongliu/code/pytorch-liteflownet/lists/seg_track_val_new.txt \
