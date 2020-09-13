@@ -183,13 +183,6 @@ def main():
             #                                      img_size[0, 1],
             #                                      img_size[0, 0])
 
-            # TODO to delete>>>>>>>>:
-            prob_out = output['prob'].data.cpu().numpy()
-            np.save('prob_map.npy', prob_out)
-            vect_out = output['vect'][-1].data.cpu().numpy()
-            np.save('vect_map.npy', vect_out)
-            exit(0)
-            #<<<<<<< delete
 
             for level_i in range(len(corr_range)):
                 scale_factor = 1 / 2**(7 - level_i - 1)
@@ -197,6 +190,7 @@ def main():
                                                  img_size[0, 1],
                                                  img_size[0, 0])
             
+            output['prob'] = output['prob'].data.cpu().numpy()
             if args.evaluate:
                 avg_epe.update(output['epe'].mean().data, img_list[0].size(0))
 
@@ -236,6 +230,8 @@ def main():
                 for folder in vec_folder_list:
                     vec_sub_folder_list.append(join(folder, sub_folders[curr_idx]))
 
+                prob_sub_folder = join(prob_folder, sub_folders[curr_idx])
+                check_makedirs(prob_sub_folder)
                 check_makedirs(vis_sub_folder)
                 # check_makedirs(vec_sub_folder)
                 for folder in vec_sub_folder_list:
@@ -259,6 +255,8 @@ def main():
                 vect_fn_list = []
                 for folder in vec_sub_folder_list:
                     vect_fn_list.append(join(folder, names[curr_idx] + '.' + fn_suffix))
+                prob_fn = join(prob_sub_folder, names[curr_idx] + '.npy')
+                np.save(prob_fn, output['prob'])
 
                 if args.task == 'flow':
                     if fn_suffix == 'png':
